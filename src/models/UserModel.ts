@@ -1,0 +1,21 @@
+export type UserModel = {
+  userId: string;
+  name: string;
+  email: string;
+  password: string;
+  projects: string[];
+  totalLikes: number;
+  totalComments: number;
+  totalProjects: number;
+  followers: string[];
+  following: string[];
+  profileImage: string;
+  bio: string;
+  location: string;
+  website: string;
+  twitter: string;
+  github: string;
+  linkedin: string;
+  createdAt: string;
+  updatedAt: string;
+};

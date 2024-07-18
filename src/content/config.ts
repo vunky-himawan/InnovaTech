@@ -1,0 +1,70 @@
+// Import utilities from `astro:content`
+import { z, defineCollection } from "astro:content";
+// Define a `type` and `schema` for each collection
+const articleCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    articleId: z.string(),
+    title: z.string(),
+    pubDate: z.date(),
+    description: z.string(),
+    authorId: z.string(),
+    cover: z.string(),
+    tags: z.array(z.string()),
+    category: z.string(),
+    totalLikes: z.number(),
+    totalComments: z.number(),
+  }),
+});
+
+const projectCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    projectId: z.string(),
+    title: z.string(),
+    description: z.string(),
+    cover: z.string(),
+    github: z.string(),
+    totalLikes: z.number(),
+    totalComments: z.number(),
+    authorId: z.string(),
+  }),
+});
+
+const eventCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    eventId: z.string(),
+    title: z.string(),
+    description: z.string(),
+    date: z.date(),
+    fee: z.number(),
+    location: z.string(),
+    cover: z.string(),
+    totalLikes: z.number(),
+    totalComments: z.number(),
+    totalInterested: z.number(),
+    category: z.enum(["workshop", "competition", "seminar", "conference"]),
+    authorId: z.string(),
+  }),
+});
+
+const communityCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    communityId: z.string(),
+    name: z.string(),
+    description: z.string(),
+    cover: z.string(),
+    authorId: z.string(),
+    totalMembers: z.number(),
+    createdAt: z.date(),
+  }),
+});
+// Export a single `collections` object to register your collection(s)
+export const collections = {
+  articles: articleCollection,
+  projects: projectCollection,
+  events: eventCollection,
+  communities: communityCollection,
+};

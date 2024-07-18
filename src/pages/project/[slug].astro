@@ -1,0 +1,24 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+type Props = {
+  entry: CollectionEntry<"projects">;
+};
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<MainLayout seo={{ title: "Project" }}>
+  <Content />
+</MainLayout>

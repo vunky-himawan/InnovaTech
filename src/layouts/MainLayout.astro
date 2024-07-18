@@ -1,0 +1,28 @@
+---
+import "@unocss/reset/tailwind.css";
+import { fade, ViewTransitions } from "astro:transitions";
+import SEO, { type Props as SEOProps } from "@/components/SEO.astro";
+
+export interface Props {
+  seo: SEOProps;
+}
+
+const { seo } = Astro.props;
+---
+
+<!doctype html>
+<html
+  lang="en"
+  class="no-scrollbar"
+  transition:animate={fade({ duration: "1s" })}
+>
+  <head>
+    <SEO {...seo} />
+    <ViewTransitions />
+  </head>
+  <body class="no-scrollbar">
+    <main class="text-primary font-satoshi flex flex-col">
+      <slot />
+    </main>
+  </body>
+</html>
