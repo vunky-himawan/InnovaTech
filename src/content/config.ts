@@ -37,7 +37,19 @@ const eventCollection = defineCollection({
     eventId: z.string(),
     title: z.string(),
     description: z.string(),
-    date: z.date(),
+    timeline: z.object({
+      registration: z.array(
+        z.object({
+          start: z.coerce.date(),
+          end: z.coerce.date(),
+        })
+      ),
+      start: z.coerce.date(),
+      end: z.coerce.date(),
+      timezone: z.string(),
+      location: z.string(),
+    }),
+    registrationLink: z.string(),
     fee: z.number(),
     location: z.string(),
     cover: z.string(),

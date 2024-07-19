@@ -1,0 +1,142 @@
+---
+import { UserData } from "@/data/UserData";
+import MainLayout from "./MainLayout.astro";
+import Timer from "@/components/Timer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+const { frontmatter, slug } = Astro.props;
+
+const author = UserData.find((user) => user.userId === frontmatter.authorId);
+const registrationBatches = frontmatter.timeline.registration.length;
+const endOfRegistrationDate = new Date(
+  frontmatter.timeline.registration[registrationBatches - 1].end
+);
+const registrationActive: boolean =
+  endOfRegistrationDate.getTime() > new Date().getTime();
+
+type Registration = {
+  start: Date;
+  end: Date;
+};
+---
+
+<MainLayout seo={{ title: frontmatter.title }}>
+  <Header />
+  <section
+    class="md:grid md:grid-cols-8 max-w-7xl md:gap-5 mx-auto h-fit py-24"
+  >
+    <div class="md:col-span-2 md:flex md:flex-col gap-5">
+      <button
+        onclick="window.history.back()"
+        class="flex items-center justify-center gap-2 border border-gray-200 rounded-lg p-5 hover:bg-gray-100 hover:border-primary/20 duration-300"
+      >
+        <div class="i-heroicons:arrow-long-left-solid w-5 h-5"></div>
+        <p class="text-md">Back to Events</p>
+      </button>
+      <div
+        class="flex flex-col gap-3 h-25rem border border-gray-200 rounded-lg p-5"
+      >
+        <h1 class="font-medium text-xl">Poster</h1>
+        <picture class="w-full h-full">
+          <img
+            src={`/images/events/${slug}/${frontmatter.cover}`}
+            alt="Poster"
+            class="object-cover w-full h-full rounded-lg"
+          />
+        </picture>
+        <a
+          href={`/images/events/${slug}/${frontmatter.cover}`}
+          download
+          class="text-blue-5 hover:underline">Download Poster</a
+        >
+      </div>
+    </div>
+    <div class="md:col-span-4 prose flex flex-col gap-5">
+      <div class="p-5 border border-gray-200 rounded-lg">
+        <p>by {author?.name}</p>
+        <h1>{frontmatter.title}</h1>
+        <div class="flex gap-2 items-center">
+          <div class="i-heroicons:map-pin-16-solid w-5 h-5"></div>
+          <p>{frontmatter.location}</p>
+        </div>
+        <div>
+          <Timer
+            client:only
+            date={frontmatter.timeline.start}
+            timeZone={frontmatter.timeline.timezone}
+          />
+        </div>
+      </div>
+      <div class="p-5 border border-gray-200 rounded-lg">
+        <slot />
+      </div>
+    </div>
+    <div class="md:col-span-2 flex flex-col gap-5">
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Timeline</h1>
+        <div class="flex flex-col gap-2">
+          {
+            frontmatter.timeline.registration.map(
+              (registration: Registration, index: number) => (
+                <div>
+                  <p class="font-medium">Registration - Batch {index + 1}:</p>
+                  <p>
+                    {" "}
+                    {registration.start.toLocaleString("en-US", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}{" "}
+                    to{" "}
+                    {registration.end.toLocaleString("en-US", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+              )
+            )
+          }
+        </div>
+        <div>
+          <p class="font-medium">Start:</p>
+          <p>
+            {
+              frontmatter.timeline.start.toLocaleString("en-US", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+            }
+          </p>
+        </div>
+      </div>
+      {
+        registrationActive && (
+          <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+            <h1 class="font-medium text-xl">Registration</h1>
+            <div class="flex flex-col gap-2">
+              <p>Fee: ${frontmatter.fee}</p>
+              <a href="" class="text-blue-5 hover:underline">
+                Register
+              </a>
+            </div>
+          </div>
+        )
+      }
+      {
+        !registrationActive && (
+          <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+            <h1 class="font-medium text-xl">Registration</h1>
+            <div class="flex flex-col gap-2">
+              <p>Registration is closed.</p>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+  <Footer />
+</MainLayout>

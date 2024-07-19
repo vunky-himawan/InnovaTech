@@ -1,5 +1,5 @@
 ---
-import MainLayout from "@/layouts/MainLayout.astro";
+import EventLayout from "@/layouts/EventLayout.astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 
@@ -19,6 +19,6 @@ const { entry } = Astro.props;
 const { Content } = await entry.render();
 ---
 
-<MainLayout seo={{ title: "Event" }}>
+<EventLayout frontmatter={entry.data} slug={entry.slug}>
   <Content />
-</MainLayout>
+</EventLayout>
