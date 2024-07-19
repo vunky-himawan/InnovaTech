@@ -24,15 +24,15 @@ type Registration = {
 <MainLayout seo={{ title: frontmatter.title }}>
   <Header />
   <section
-    class="md:grid md:grid-cols-8 max-w-7xl md:gap-5 mx-auto h-fit py-24"
+    class="flex flex-col gap-5 md:grid md:grid-cols-8 max-w-7xl md:gap-5 mx-auto h-fit py-24"
   >
-    <div class="md:col-span-2 md:flex md:flex-col gap-5">
+    <div class="md:col-span-2 flex flex-col gap-5 max-md:order-1">
       <button
         onclick="window.history.back()"
         class="flex items-center justify-center gap-2 border border-gray-200 rounded-lg p-5 hover:bg-gray-100 hover:border-primary/20 duration-300"
       >
         <div class="i-heroicons:arrow-long-left-solid w-5 h-5"></div>
-        <p class="text-md">Back to Events</p>
+        <p class="text-md">Back</p>
       </button>
       <div
         class="flex flex-col gap-3 h-25rem border border-gray-200 rounded-lg p-5"
@@ -52,7 +52,7 @@ type Registration = {
         >
       </div>
     </div>
-    <div class="md:col-span-4 prose flex flex-col gap-5">
+    <div class="md:col-span-4 prose flex flex-col gap-5 max-md:order-3">
       <div class="p-5 border border-gray-200 rounded-lg">
         <p>by {author?.name}</p>
         <h1>{frontmatter.title}</h1>
@@ -72,7 +72,7 @@ type Registration = {
         <slot />
       </div>
     </div>
-    <div class="md:col-span-2 flex flex-col gap-5">
+    <div class="md:col-span-2 flex flex-col gap-5 max-md:order-2">
       <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
         <h1 class="font-medium text-xl">Timeline</h1>
         <div class="flex flex-col gap-2">
