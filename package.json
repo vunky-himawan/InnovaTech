@@ -24,6 +24,7 @@
   "devDependencies": {
     "@iconify-json/heroicons": "^1.1.21",
     "@iconify-json/heroicons-solid": "^1.1.11",
+    "@iconify-json/logos": "^1.1.43",
     "@iconify-json/ri": "^1.1.21",
     "@unocss/preset-icons": "^0.61.3",
     "@unocss/preset-web-fonts": "^0.61.2",

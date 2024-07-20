@@ -58,6 +58,24 @@ const eventCollection = defineCollection({
     totalInterested: z.number(),
     category: z.enum(["workshop", "competition", "seminar", "conference"]),
     authorId: z.string(),
+    contacts: z
+      .object({
+        email: z.string().nullable(),
+        phone: z.string().nullable(),
+        twitter: z.string().nullable(),
+        linkedin: z.string().nullable(),
+        github: z.string().nullable(),
+        instagram: z.string().nullable(),
+        website: z.string().nullable(),
+      })
+      .refine(
+        (data) =>
+          Object.values(data).some((value) => value !== null && value !== ""),
+        {
+          message: "At least one contact is required",
+          path: ["contacts"],
+        } 
+      ),
   }),
 });
 
