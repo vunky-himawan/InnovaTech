@@ -77,9 +77,9 @@ type Registration = {
 <MainLayout seo={{ title: frontmatter.title }}>
   <Header />
   <section
-    class="flex flex-col gap-5 md:grid md:grid-cols-8 max-w-7xl md:gap-5 mx-auto h-fit py-24"
+    class="flex flex-col gap-5 lg:grid lg:grid-cols-8 max-w-7xl lg:gap-5 mx-auto h-fit py-24"
   >
-    <div class="md:col-span-2 flex flex-col gap-5 max-md:order-1">
+    <div class="lg:col-span-2 flex flex-col gap-5 max-lg:order-1">
       <button
         onclick="window.history.back()"
         class="flex items-center justify-center gap-2 border border-gray-200 rounded-lg p-5 hover:bg-gray-100 hover:border-primary/20 duration-300"
@@ -88,14 +88,14 @@ type Registration = {
         <p class="text-md">Back</p>
       </button>
       <div
-        class="flex flex-col gap-3 h-25rem border border-gray-200 rounded-lg p-5"
+        class="flex flex-col gap-3 min-h-25rem border border-gray-200 rounded-lg p-5"
       >
         <h1 class="font-medium text-xl">Poster</h1>
         <picture class="w-full h-full">
           <img
             src={`/images/events/${slug}/${frontmatter.cover}`}
             alt="Poster"
-            class="object-cover w-full h-full rounded-lg"
+            class="object-cover w-full h-full max-h-30rem rounded-lg"
           />
         </picture>
         <a
@@ -140,7 +140,7 @@ type Registration = {
         </div>
       </div>
     </div>
-    <div class="md:col-span-4 flex flex-col gap-5 max-md:order-3">
+    <div class="lg:col-span-4 flex flex-col gap-5 max-lg:order-3">
       <div class="p-5 border border-gray-200 rounded-lg flex flex-col gap-5">
         <div class="flex gap-2 items-center justify-between">
           <div class="flex gap-2 items-center">
@@ -162,11 +162,13 @@ type Registration = {
           />
         </div>
       </div>
-      <div class="p-5 border border-gray-200 rounded-lg prose">
-        <slot />
+      <div class="p-5 border border-gray-200 rounded-lg max-lg:w-full">
+        <article class="prose">
+          <slot />
+        </article>
       </div>
     </div>
-    <div class="md:col-span-2 flex flex-col gap-5 max-md:order-2">
+    <div class="lg:col-span-2 flex flex-col gap-5 max-lg:order-2">
       <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
         <h1 class="font-medium text-xl">Timeline</h1>
         <div class="flex flex-col gap-2">
