@@ -4,6 +4,7 @@ import MainLayout from "./MainLayout.astro";
 import Timer from "@/components/Timer";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getUpcomingEvents } from "@/services/EventService";
 
 const { frontmatter, slug } = Astro.props;
 
@@ -14,6 +15,10 @@ const endOfRegistrationDate = new Date(
 );
 const registrationActive: boolean =
   endOfRegistrationDate.getTime() > new Date().getTime();
+
+const upcomingEvents = getUpcomingEvents(frontmatter.eventId);
+
+console.log(upcomingEvents);
 
 type Registration = {
   start: Date;
@@ -113,29 +118,44 @@ type Registration = {
           </p>
         </div>
       </div>
-      {
-        registrationActive && (
-          <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
-            <h1 class="font-medium text-xl">Registration</h1>
-            <div class="flex flex-col gap-2">
-              <p>Fee: ${frontmatter.fee}</p>
-              <a href="" class="text-blue-5 hover:underline">
-                Register
-              </a>
-            </div>
-          </div>
-        )
-      }
-      {
-        !registrationActive && (
-          <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
-            <h1 class="font-medium text-xl">Registration</h1>
-            <div class="flex flex-col gap-2">
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Registration</h1>
+        <div class="flex flex-col gap-2">
+          {
+            registrationActive ? (
+              <>
+                <p class="font-medium">
+                  {frontmatter.fee === 0 ? "Free" : `Fee: $${frontmatter.fee}`}
+                </p>
+                <a href="" class="text-blue-5 hover:underline">
+                  {" "}
+                  Register{" "}
+                </a>
+              </>
+            ) : (
               <p>Registration is closed.</p>
-            </div>
-          </div>
-        )
-      }
+            )
+          }
+        </div>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">
+          Upcoming Events {new Date().getFullYear()}
+        </h1>
+        <div class="flex flex-col gap-2">
+          {
+            upcomingEvents.map((event) => (
+              <a
+                href={`/event/${event.slug}`}
+                class="flex gap-2 items-center hover:underline"
+              >
+                <div class="i-heroicons:calendar-16-solid w-5 h-5" />
+                <p>{event.data.title}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </section>
   <Footer />
