@@ -6,7 +6,8 @@ const articleCollection = defineCollection({
   schema: z.object({
     articleId: z.string(),
     title: z.string(),
-    pubDate: z.date(),
+    pubDate: z.coerce.date(),
+    lastUpdated: z.coerce.date(),
     description: z.string(),
     authorId: z.string(),
     cover: z.string(),
@@ -74,7 +75,7 @@ const eventCollection = defineCollection({
         {
           message: "At least one contact is required",
           path: ["contacts"],
-        } 
+        }
       ),
   }),
 });
