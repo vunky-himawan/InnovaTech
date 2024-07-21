@@ -48,8 +48,8 @@ const Feedback = () => {
               Reviews
             </h1>
           </motion.div>
-          <div className="flex flex-col text-white gap-5 relative">
-            <div className="flex w-fit gap-5">
+          <div className="grid grid-cols-1 grid-rows-4 text-white gap-5 relative min-h-full max-h-fit overflow-hidden">
+            <div className="flex w-fit gap-5 h-full">
               <Slide
                 data={feedbacks.slice(0, 5)}
                 scrollYProgress={scrollYProgress}
@@ -61,7 +61,7 @@ const Feedback = () => {
                 direction="left"
               />
             </div>
-            <div className="flex w-fit gap-5">
+            <div className="flex w-fit gap-5 h-full">
               <Slide
                 data={feedbacks.slice(5, 10)}
                 scrollYProgress={scrollYProgress}
@@ -73,7 +73,7 @@ const Feedback = () => {
                 direction="right"
               />
             </div>
-            <div className="flex w-fit gap-5">
+            <div className="flex w-fit gap-5 h-full">
               <Slide
                 data={feedbacks.slice(10, 15)}
                 scrollYProgress={scrollYProgress}
@@ -85,7 +85,7 @@ const Feedback = () => {
                 direction="left"
               />
             </div>
-            <div className="flex w-fit gap-5 ">
+            <div className="flex w-fit gap-5 h-full ">
               <Slide
                 data={feedbacks.slice(15, 20)}
                 scrollYProgress={scrollYProgress}
@@ -150,7 +150,7 @@ const Slide = ({ data, scrollYProgress, direction }: SlideProps) => {
       <motion.div
         initial={{ translateX: "-300%" }}
         animate={controls}
-        className="grid grid-cols-5 grid-rows-1 w-max gap-5"
+        className="grid grid-cols-5 grid-rows-1 w-max gap-5 h-full"
       >
         {data.map((feedback) => (
           <Card key={feedback.id} data={feedback} />
@@ -169,7 +169,7 @@ const Card = ({ data }: CardProps) => {
     <>
       <motion.div
         whileHover={{ scale: 1.02 }}
-        className="flex flex-col cursor-pointer bg-primary gap-5 p-10 w-30rem h-full border border-gray-blue/50 rounded-3xl"
+        className="flex flex-col cursor-pointer bg-primary/20 backdrop-blur gap-5 p-10 w-30rem h-full border border-gray-blue/40 rounded-3xl"
       >
         <div>
           <h1 className="text-gray-4 font-bold text-2xl">{data.name}</h1>

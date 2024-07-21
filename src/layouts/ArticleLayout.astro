@@ -19,7 +19,7 @@ const author = UserData.find((user) => user.userId === frontmatter.authorId);
 ---
 
 <MainLayout seo={{ title: frontmatter.title }}>
-  <Header />
+  <Header client:only />
   <div class="flex flex-col gap-5 mx-auto h-fit w-full items-center">
     <section class="w-full flex flex-col gap-10">
       <picture class="w-full h-full">
@@ -144,6 +144,6 @@ const author = UserData.find((user) => user.userId === frontmatter.authorId);
         <Comment client:only />
       </section>
     </section>
-    <Footer />
+    <Footer client:only />
   </div>
 </MainLayout>

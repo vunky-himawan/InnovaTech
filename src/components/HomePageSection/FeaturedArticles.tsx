@@ -22,12 +22,12 @@ const FeaturedArticles = ({ articles }: FeaturedArticlesProps) => {
     <>
       <section
         ref={container}
-        className="w-screen md:h-300vh max-w-1800px mx-auto mt-20"
+        className="w-screen lg:h-300vh max-w-1800px mx-auto mt-20"
       >
-        <div className="flex flex-col gap-15 w-full md:sticky md:top-25 md:h-90vh">
+        <div className="flex flex-col gap-15 w-full lg:sticky lg:top-25 lg:h-90vh">
           <div className="flex flex-col justify-center items-center gap-3 px-5">
-            <div className="bg-blue-5/20 w-10rem md:w-12rem p-3 rounded-full md:py-3 md:px-5">
-              <h1 className="text-blue-500 font-medium text-center md:text-lg">
+            <div className="bg-blue-5/20 w-10rem lg:w-12rem p-3 rounded-full lg:py-3 lg:px-5">
+              <h1 className="text-blue-500 font-medium text-center lg:text-lg">
                 Featured Articles
               </h1>
             </div>
@@ -39,7 +39,7 @@ const FeaturedArticles = ({ articles }: FeaturedArticlesProps) => {
             />
           </div>
           <div className="relative h-full">
-            <div className="h-full flex flex-col items-center md:relative overflow-hidden max-md:gap-5 max-md:p-5">
+            <div className="h-full flex flex-col items-center lg:relative overflow-hidden max-lg:gap-5 max-lg:p-5">
               {articles.map((article, index) => {
                 const start = index / articles.length;
                 const end = start + 1 / articles.length;
@@ -71,7 +71,7 @@ type CardProps = {
 };
 
 const Card = ({ data, slug, scrollYProgress, start, end }: CardProps) => {
-  const isMobile: boolean = window.innerWidth < 768;
+  const isMobile: boolean = window.innerWidth < 1024;
   const [show, setShow] = useState(start === 0);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
@@ -111,7 +111,7 @@ const Card = ({ data, slug, scrollYProgress, start, end }: CardProps) => {
           animate="animate"
           variants={variants}
           transition={{ type: "spring", duration: 1, ease: "easeInOut" }}
-          className={`md:h-full md:w-full md:flex bg-white md:absolute `}
+          className={`lg:h-full lg:w-full lg:flex bg-white lg:absolute `}
         >
           <Content data={data} slug={slug} />
         </motion.div>
@@ -126,7 +126,7 @@ type ContentProps = {
 };
 
 const Content = ({ data, slug }: ContentProps) => {
-  const isMobile: boolean = window.innerWidth < 768;
+  const isMobile: boolean = window.innerWidth < 1024;
   const [hasAnimated, setHasAnimated] = useState(false);
   const author: UserModel | undefined = UserData.find(
     (user) => user.userId === data.authorId
@@ -146,7 +146,7 @@ const Content = ({ data, slug }: ContentProps) => {
         variants={variants}
         animate={isMobile ? (hasAnimated ? "animate" : "initial") : ""}
         onViewportEnter={() => setHasAnimated(true)}
-        transition={{ duration: 2, ease: "linear", type: "spring" }}
+        transition={{ duration: 1, ease: "linear", type: "spring" }}
         style={
           isMobile
             ? { backgroundColor: "rgb(59, 130, 246)" }
@@ -154,9 +154,9 @@ const Content = ({ data, slug }: ContentProps) => {
                 backgroundImage: `url(/images/articles/${slug}/${data.cover})`,
               }
         }
-        className="w-full h-full bg-cover bg-center bg-no-repeat max-md:rounded-3xl max-md:overflow-hidden"
+        className="w-full h-full bg-cover bg-center bg-no-repeat max-lg:rounded-3xl max-lg:overflow-hidden"
       >
-        <div className="h-full md:bg-primary/40 text-white">
+        <div className="h-full lg:bg-primary/40 text-white">
           <motion.div
             initial={isMobile ? "" : "initial"}
             variants={variants}
@@ -167,12 +167,15 @@ const Content = ({ data, slug }: ContentProps) => {
               ease: "linear",
               type: "spring",
             }}
-            // onViewportEnter={() => setHasAnimated(true)}
-            className="flex flex-col md:p-3 justify-center items-center h-fit md:h-full gap-5"
+            className="flex flex-col lg:p-3 justify-center items-center h-fit lg:h-full gap-5"
           >
             {isMobile && (
-              <picture>
-                <img src={`/images/articles/${slug}/${data.cover}`} alt="" />
+              <picture className="w-full">
+                <img
+                  src={`/images/articles/${slug}/${data.cover}`}
+                  alt=""
+                  className="w-full h-full object-cover"
+                />
               </picture>
             )}
             <div className="flex flex-col gap-5 p-5 justify-center items-center">
@@ -191,7 +194,7 @@ const Content = ({ data, slug }: ContentProps) => {
                   <p>{author?.name ?? ""}</p>
                 </div>
               </div>
-              <p className="lg:text-lg text-center">{data.description}</p>
+              <p className="md:text-lg text-center">{data.description}</p>
             </div>
           </motion.div>
         </div>
