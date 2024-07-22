@@ -1,7 +1,7 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Header from "@/components/Header";
-import HeroDetail from "@/components/HeroDetail";
+import Hero from "@/components/EventPageSection/Hero";
 import EventTrending from "@/components/EventPageSection/EventTrending";
 import Footer from "@/components/Footer";
 import EventBlogPost from "@/components/EventPageSection/EventBlogPost";
@@ -19,16 +19,15 @@ const category = ["conference", "workshop", "seminar", "competition"];
 
 <MainLayout seo={{ title: "Events" }}>
   <Header client:only />
-  <HeroDetail
+  <Hero
     title="Events"
     description="Participate in the latest technology events and competitions hosted by Innovatech. From annual summits to hackathons and panel discussions, find opportunities to learn, network, and innovate with tech professionals."
     inspire="Problem Solving"
     categories={category}
     client:only
   />
-  <EventTrending events={sortedEvents} client:only />
+  <EventTrending client:only />
   <EventBlogPost
-    events={sortedEvents}
     category={category}
     client:only
   />

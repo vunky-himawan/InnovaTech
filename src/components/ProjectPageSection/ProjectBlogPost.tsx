@@ -9,6 +9,8 @@ import SearchComponent from '../SearchComponent';
 import Tag from '../Tag';
 import Button from '../Button';
 import Card from './Card';
+import { useStore } from '@nanostores/react';
+import { $filteredProjectsAtom, $searchAtom, $selectedCategoryAtom, $selectedTagAtom, setSearch, setSelectedCategory, setSelectedTags } from '@/stores/ProjectStore';
 
 type FeaturedProjectsProps = {
   projects: CollectionEntry<"projects">[];
@@ -16,50 +18,11 @@ type FeaturedProjectsProps = {
   tags?: string[];
 };
 
-const ProjectBlogPost = ({ projects, category, tags }: FeaturedProjectsProps) => {
-  const [filteredProjects, setFilteredProjects] = useState<CollectionEntry<"projects">[]>(projects);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  const handleTopicChange = (selected: string) => {
-    setSelectedCategory(selected);
-  };
-
-  const handleTagChange = (selected: string[]) => {
-    setSelectedTags(selected);
-  };
-
-  useEffect(() => {
-    let result = projects;
-
-    if (search) {
-      result = result.filter((project) =>
-        project.data.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // if (selectedCategory) {
-    //   result = result.filter((project) =>
-    //     Array.isArray(selectedCategory)
-    //       ? selectedCategory.includes(project.data.category)
-    //       : project.data.category === selectedCategory
-    //   );
-    // }
-
-    // if (selectedTags.length > 0) {
-    //   result = result.filter((project) =>
-    //     selectedTags.every(tag => project.data.tags?.includes(tag))
-    //   );
-    // }
-
-    setFilteredProjects(result);
-  }, [search, selectedCategory, selectedTags]);
-
-
-  useEffect(() => {
-    setFilteredProjects(projects);
-  }, [projects]);
+const ProjectBlogPost = ({ category, tags }: FeaturedProjectsProps) => {
+  const projects = useStore($filteredProjectsAtom);
+  const search = useStore($searchAtom);
+  const selectedCategory = useStore($selectedCategoryAtom);
+  const selectedTag = useStore($selectedTagAtom);
 
   return (
     <section className="gap-5 max-w-[1800px] w-full mx-auto p-5 my-10 ">
@@ -67,10 +30,10 @@ const ProjectBlogPost = ({ projects, category, tags }: FeaturedProjectsProps) =>
         <div className="col-span-3 xl:col-span-2 gap-5">
           <Tabbar category={category} selectedCategory={selectedCategory} callback={setSelectedCategory} />
           <div className="grid grid-cols-span-1 gap-5 my-5">
-            {filteredProjects.length === 0 ? (
+            {projects.length === 0 ? (
               <div>No projects found</div>
             ) : (
-              filteredProjects.map((project) => (
+              projects.map((project) => (
                 <Card
                   key={project.id}
                   title={project.data.title}
@@ -93,8 +56,8 @@ const ProjectBlogPost = ({ projects, category, tags }: FeaturedProjectsProps) =>
         <div className="col-span-3 xl:col-span-1 order-first xl:order-last">
           <SearchComponent placeHolder="Search Project" searchInput={search} callback={setSearch} />
           <div className="col-span-3 xl:col-span-1 space-y-20 my-10">
-            {tags && <Filter title="Popular Tags" list={tags} select={[]} callback={handleTagChange} />}
-            {category && <Filter title="Popular Category" list={category} select={""} callback={handleTopicChange} />}
+            {tags && <Filter title="Popular Tags" list={tags} select={selectedTag} callback={setSelectedTags} />}
+            {category && <Filter title="Popular Category" list={category} select={selectedCategory} callback={setSelectedCategory} />}
           </div>
         </div>
       </div>

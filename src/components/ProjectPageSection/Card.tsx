@@ -53,12 +53,12 @@ const Card = ({ slug, userId, cover, title, description, totalContributors, tota
     return (
         <motion.div
             ref={cardRef}
-            className="flex flex-col xl:flex-row bg-gray-blue rounded-xl gap-3 md:gap-5 shadow-lg p-5"
+            className="flex flex-col xl:flex-row bg-gray-blue rounded-xl gap-3 md:gap-5 shadow-lg p-5 h-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isCardVisible ? 1 : 0, y: isCardVisible ? 0 : 20 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="relative w-full xl:w-1/2 h-80 xl:h-96 overflow-hidden rounded-lg flex-shrink-0">
+            <div className="relative w-full xl:w-1/2 min-h-80 overflow-hidden rounded-lg flex-shrink-0">
                 <motion.img
                     draggable={false}
                     src={`/images/projects/${slug}/${cover}`}
@@ -69,7 +69,7 @@ const Card = ({ slug, userId, cover, title, description, totalContributors, tota
                     transition={{ duration: 0.5 }}
                 />
             </div>
-            <div className="flex flex-col justify-between gap-3 flex-grow">
+            <div className="flex flex-col justify-center gap-3 flex-grow">
                 <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1">

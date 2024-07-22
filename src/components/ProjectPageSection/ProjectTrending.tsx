@@ -3,12 +3,12 @@ import Text from "@/utils/textReveal";
 import type { CollectionEntry } from "astro:content";
 import { AnimatePresence, motion, useSpring } from "framer-motion";
 import Card from "./Card";
+import { $projectsAtom } from "@/stores/ProjectStore";
+import { useStore } from "@nanostores/react";
 
-type FeaturedProjectsProps = {
-    projects: CollectionEntry<"projects">[];
-};
 
-const ProjectTrending = ({ projects }: FeaturedProjectsProps) => {
+const ProjectTrending = () => {
+    const projects = useStore($projectsAtom);
     const [trendingProjects, setTrendingProjects] = useState<CollectionEntry<"projects">[]>([]);
 
     useEffect(() => {

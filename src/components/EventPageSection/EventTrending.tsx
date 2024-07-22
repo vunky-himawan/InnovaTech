@@ -2,15 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import Text from "@/utils/textReveal";
 import type { CollectionEntry } from "astro:content";
 import { UserData } from "@/data/UserData";
-import { AnimatePresence, motion, useAnimation, useMotionValue, useTransform } from "framer-motion";
+import {  motion, useMotionValue, useTransform } from "framer-motion";
 import Tag from "../Tag";
+import { $eventsAtom } from "@/stores/EventStore";
+import { useStore } from "@nanostores/react";
 
-type FeaturedEventsProps = {
-    events: CollectionEntry<"events">[];
-};
 
-const EventTrending = ({ events }: FeaturedEventsProps) => {
-    const [event, setEvent] = useState<CollectionEntry<"events">[]>(events);
+const EventTrending = () => {
+    const event = useStore($eventsAtom);
     const sortedEvents = [...event].sort((a, b) => {
         const totalA = a.data.totalLikes + a.data.totalComments;
         const totalB = b.data.totalLikes + b.data.totalComments;

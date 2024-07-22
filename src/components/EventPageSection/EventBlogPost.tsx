@@ -6,63 +6,36 @@ import type { CollectionEntry } from 'astro:content';
 import { motion } from 'framer-motion';
 import SearchComponent from '../SearchComponent';
 import Tag from '../Tag';
+import { $filteredEventsAtom, $searchAtom, $selectedCategoryAtom, setSearch, setSelectedCategory } from '@/stores/EventStore';
+import { useStore } from '@nanostores/react';
+import Filter from '../Filter';
 
 type FeaturedEventsProps = {
-  events: CollectionEntry<"events">[];
   category: string[];
-  tags?: string[];
 };
 
-const ArticleBlogPost = ({ events, category, tags }: FeaturedEventsProps) => {
-  const [filteredEvents, setFilteredEvents] = useState<CollectionEntry<"events">[]>(events);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  const handleTopicChange = (selected: string) => {
-    setSelectedCategory(selected);
-  };
-
-  useEffect(() => {
-    let result = events;
-
-    if (search) {
-      result = result.filter((event) =>
-        event.data.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (selectedCategory) {
-      result = result.filter((event) =>
-        Array.isArray(selectedCategory)
-          ? selectedCategory.includes(event.data.category)
-          : event.data.category === selectedCategory
-      );
-    }
-
-    setFilteredEvents(result);
-  }, [search, selectedCategory, selectedTags]);
-
-  useEffect(() => {
-    setFilteredEvents(events);
-  }, [events]);
-
+const ArticleBlogPost = ({ category }: FeaturedEventsProps) => {
+  const event = useStore($filteredEventsAtom);
+  const search = useStore($searchAtom);
+  const selectedCategory = useStore($selectedCategoryAtom);
   return (
     <section className="gap-5 max-w-[1800px] w-full mx-auto p-5 my-10">
       <div className="grid grid-cols-3 gap-5 mt-15">
         <div className="col-span-3 xl:col-span-2 gap-5">
           <Tabbar category={category} selectedCategory={selectedCategory} callback={setSelectedCategory} />
           <div className="grid grid-cols-span-1 xl:grid-cols-2 gap-5 my-5">
-            {filteredEvents.length === 0 ? (
+            {event.length === 0 ? (
               <div>No events found</div>
-            ) : (filteredEvents.map((event, index) => (
+            ) : (event.map((event, index) => (
               <Card key={event.id} title={event.data.title} pubDate={event.data.date} cover={event.data.cover} category={event.data.category} description={event.data.description} totalLikes={event.data.totalLikes} totalComments={event.data.totalComments} authorId={event.data.authorId} slug={event.slug} colSpan={(index + 1) % 3 === 0 ? 2 : 1} />
             )))}
           </div>
         </div>
         <div className="col-span-3 xl:col-span-1 order-first xl:order-last">
           <SearchComponent placeHolder="Search Project" searchInput={search} callback={setSearch} />
-
+          <div className="col-span-3 xl:col-span-1 space-y-20 my-10">
+            {category && <Filter title="Popular Category" list={category} select={selectedCategory} callback={setSelectedCategory} />}
+          </div>
         </div>
       </div>
     </section>

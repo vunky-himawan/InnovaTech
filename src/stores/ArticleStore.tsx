@@ -22,14 +22,21 @@ export const setFilteredArticles = (filteredArticles: CollectionEntry<"articles"
 };
 
 export const setSelectedCategory = (category: string) => {
-    if (category === "") {
-        $selectedCategoryAtom.set(category);
+    const currentCategory = $selectedCategoryAtom.get();
+
+    if (currentCategory === category) {
+        $selectedCategoryAtom.set("");
         $filteredArticlesAtom.set($articlesAtom.get());
     } else {
-        const articles = $articlesAtom.get();
-        const filteredArticles = articles.filter(a => a.data.category === category);
-        $selectedCategoryAtom.set(category);
-        $filteredArticlesAtom.set(filteredArticles);
+        if (category === "") {
+            $selectedCategoryAtom.set(category);
+            $filteredArticlesAtom.set($articlesAtom.get());
+        } else {
+            const articles = $articlesAtom.get();
+            const filteredArticles = articles.filter(a => a.data.category === category);
+            $selectedCategoryAtom.set(category);
+            $filteredArticlesAtom.set(filteredArticles);
+        }
     }
 }
 
