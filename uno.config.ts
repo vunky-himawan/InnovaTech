@@ -1,10 +1,17 @@
 // uno.config.ts
-import { defineConfig, presetIcons, presetUno, presetWebFonts } from "unocss";
+import {
+  defineConfig,
+  presetIcons,
+  presetTypography,
+  presetUno,
+  presetWebFonts,
+} from "unocss";
 
 export default defineConfig({
   presets: [
     presetIcons(),
     presetUno(),
+    presetTypography(),
     presetWebFonts({
       provider: "fontshare",
       fonts: {

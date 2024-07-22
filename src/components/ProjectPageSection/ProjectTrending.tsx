@@ -57,15 +57,7 @@ const ProjectTrending = () => {
                     <AnimatePresence mode="wait">
                         {project && (
                             <motion.div key={project.id} className="flex-1">
-                                <Card slug={project.slug} userId={project.data.authorId} cover={project.data.cover} title={project.data.title} description={project.data.description} totalContributors={3000} totalLikes={project.data.totalLikes} totalComments={project.data.totalComments} link={project.data.github} tags={[
-                                    "JavaScript",
-                                    "React",
-                                    "Node.js",
-                                    "MongoDB",
-                                    "Express.js",
-                                    "TailwindCSS",
-                                    "Firebase",
-                                ]} />
+                                <Card slug={project.slug} userId={project.data.authorId} cover={project.data.cover} title={project.data.title} description={project.data.description} totalContributors={project.data.totalContributor} totalLikes={project.data.totalLikes} totalComments={project.data.totalComments} link={project.data.github} tags={project.data.tags} />
                             </motion.div>
                         )}
                     </AnimatePresence>

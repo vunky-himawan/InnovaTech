@@ -10,11 +10,11 @@ import { $filteredArticlesAtom,  $searchAtom, $selectedCategoryAtom, $selectedTa
 import { useStore } from '@nanostores/react';
 
 type FeaturedArticlesProps = {
-  category: string[];
+  categories: string[];
   tags?: string[];
 };
 
-const ArticleBlogPost = ({ category, tags }: FeaturedArticlesProps) => {
+const ArticleBlogPost = ({ categories, tags }: FeaturedArticlesProps) => {
   const store = useStore($filteredArticlesAtom);
   const search = useStore($searchAtom);
   const selectCategory = useStore($selectedCategoryAtom);
@@ -26,7 +26,7 @@ const ArticleBlogPost = ({ category, tags }: FeaturedArticlesProps) => {
     <section className="gap-5 max-w-[1800px] w-screen mx-auto p-5 my-10 ">
       <div className="grid grid-cols-3 gap-5 mt-15">
         <div className="col-span-3 xl:col-span-2 gap-5">
-          <Tabbar category={category} selectedCategory={selectCategory} callback={setSelectedCategory} />
+          <Tabbar category={categories} selectedCategory={selectCategory} callback={setSelectedCategory} />
           <div className="grid grid-cols-span-1 xl:grid-cols-2 gap-5 my-5">
             {store.length === 0 ? (
               <div>No articles found</div>
@@ -54,7 +54,7 @@ const ArticleBlogPost = ({ category, tags }: FeaturedArticlesProps) => {
             placeHolder="Search Article" callback={setSearch} />
           <div className="col-span-3 xl:col-span-1 space-y-20 my-10">
             {tags && <Filter title="Popular Tags" list={tags} select={selectTags} callback={setSelectedTags} />}
-            {category && <Filter title="Popular Category" list={category} select={selectCategory} callback={setSelectedCategory} />}
+            {categories && <Filter title="Popular Category" list={categories} select={selectCategory} callback={setSelectedCategory} />}
           </div>
         </div>
       </div>
@@ -124,6 +124,7 @@ const Card = ({
   }, [isCardVisible, scale, rotate]);
 
   return (
+    <a href={`/article/${slug}`}>
     <motion.div
       ref={cardRef}
       className={`flex flex-col ${colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1'} bg-gray-blue p-5 rounded-xl gap-3 md:gap-5 cursor-pointer shadow-lg relative`}
@@ -131,7 +132,7 @@ const Card = ({
       whileHover={{ scale: 1.05, rotate: 4, boxShadow: '0 15px 25px rgba(0, 0, 0, 0.3)' }}
       transition={{ duration: 0.3 }}
     >
-      <h1 className="font-semibold text-2xl md:text-3xl line-clamp-2">
+      <h1 className="font-semibold text-2xl md:text-3xl line-clamp-2 min-h-2.4em">
         {title}
       </h1>
       {pubDate && <p className="text-gray-400">{pubDate.toDateString()}</p>}
@@ -163,8 +164,9 @@ const Card = ({
           </div>
         </div>
       </div>
-      <p className="text-gray-400 line-clamp-3">{description}</p>
+      <p className="text-gray-400 line-clamp-3 min-h-[4.5em]">{description} </p>
     </motion.div>
+  </a>
   );
 };
 

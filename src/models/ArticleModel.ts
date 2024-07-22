@@ -2,6 +2,7 @@ export type ArticleModel = {
   articleId: string;
   title: string;
   pubDate: Date;
+  lastUpdated: Date;
   description: string;
   authorId: string;
   cover: string;

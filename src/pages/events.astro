@@ -7,13 +7,10 @@ import Footer from "@/components/Footer";
 import EventBlogPost from "@/components/EventPageSection/EventBlogPost";
 import CTA from "@/components/CTA";
 import { getCollection } from "astro:content";
+import { listCategories } from "@/stores/EventStore";
 
 const events = await getCollection("events");
-const sortedEvents = events.sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
-);
-
-const category = ["conference", "workshop", "seminar", "competition"];
+const categories = listCategories(events);
 
 ---
 
@@ -23,12 +20,12 @@ const category = ["conference", "workshop", "seminar", "competition"];
     title="Events"
     description="Participate in the latest technology events and competitions hosted by Innovatech. From annual summits to hackathons and panel discussions, find opportunities to learn, network, and innovate with tech professionals."
     inspire="Problem Solving"
-    categories={category}
+    categories={categories}
     client:only
   />
   <EventTrending client:only />
   <EventBlogPost
-    category={category}
+    categories={categories}
     client:only
   />
   <CTA

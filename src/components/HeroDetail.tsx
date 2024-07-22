@@ -37,6 +37,20 @@ const HeroDetail = ({ title, description, inspire, categories, tags, searchInput
       categoriesCallback(category);
     }
   }
+  const maximumTags = 20;
+  const totalTags = tags?.length ?? 0;
+  const totalCategories = categories?.length ?? 0;
+  const totalList = totalTags + totalCategories;
+
+  if (totalList > maximumTags) {
+    if (totalTags > totalCategories) {
+      tags = tags?.slice(0, maximumTags - totalCategories);
+    } else {
+      categories = categories?.slice(0, maximumTags - totalTags);
+    }
+  }
+
+  
   return (
     <>
       <section className="h-fit relative bg-primary overflow-hidden">

@@ -11,6 +11,7 @@ type FeaturedEventsProps = {
 };
 
 const FeaturedEvents = ({ events }: FeaturedEventsProps) => {
+  const isMobile: boolean = window.innerWidth < 1024;
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
     target: container,
@@ -23,7 +24,7 @@ const FeaturedEvents = ({ events }: FeaturedEventsProps) => {
     <>
       <section
         ref={container}
-        className="w-screen max-w-1800px mx-auto p-5 h-500vh mt-20"
+        className="w-screen max-w-1800px mx-auto p-5 lg:h-500vh mt-20"
       >
         <motion.div
           style={{ top: top }}
@@ -55,6 +56,7 @@ const FeaturedEvents = ({ events }: FeaturedEventsProps) => {
                     start={start}
                     end={end}
                     scrollYProgress={scrollYProgress}
+                    isMobile={isMobile}
                   />
                 );
               })}
@@ -72,13 +74,21 @@ type CardProps = {
   start: number;
   end: number;
   scrollYProgress: MotionValue;
+  isMobile: boolean;
 };
 
-const Card = ({ slug, data, start, end, scrollYProgress }: CardProps) => {
+const Card = ({
+  slug,
+  data,
+  start,
+  end,
+  scrollYProgress,
+  isMobile,
+}: CardProps) => {
   const User: UserModel | undefined = UserData.find(
     (u) => u.userId === data.authorId
   );
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(isMobile ? true : false);
   const [isLoading, setIsLoading] = useState(true);
   const [image, setImage] = useState("");
 
@@ -109,21 +119,23 @@ const Card = ({ slug, data, start, end, scrollYProgress }: CardProps) => {
   }, [active]);
 
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", (latest) => {
-      if (latest >= start && latest <= end) {
-        setActive(true);
-      } else {
-        setActive(false);
-      }
+    if (!isMobile) {
+      const unsubscribe = scrollYProgress.on("change", (latest) => {
+        if (latest >= start && latest <= end) {
+          setActive(true);
+        } else {
+          setActive(false);
+        }
 
-      if (latest === 0) {
-        setActive(false);
-      }
-    });
+        if (latest === 0) {
+          setActive(false);
+        }
+      });
 
-    return () => {
-      unsubscribe();
-    };
+      return () => {
+        unsubscribe();
+      };
+    }
   }, [scrollYProgress]);
 
   return (
@@ -148,7 +160,7 @@ const Card = ({ slug, data, start, end, scrollYProgress }: CardProps) => {
                   <>
                     <a
                       href={`/event/${slug}`}
-                      className="capitalize lg:p-5 flex justify-center text-blue-5 lg:text-xl"
+                      className="capitalize 2xl:p-5 flex justify-center text-blue-5 2xl:text-xl"
                     >
                       View {data.category}
                     </a>
@@ -162,7 +174,7 @@ const Card = ({ slug, data, start, end, scrollYProgress }: CardProps) => {
                     </picture>
                     <p className="lg:text-xl text-center">{data.description}</p>
                     <p className="font-bold ">
-                      {new Date(data.date).toDateString()}
+                      {new Date(data.timeline.start).toDateString()}
                     </p>
                     <p>by {User?.name}</p>
                   </>

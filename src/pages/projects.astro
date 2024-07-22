@@ -6,29 +6,12 @@ import ProjectTrending from "@/components/ProjectPageSection/ProjectTrending";
 import ProjectBlogPost from "@/components/ProjectPageSection/ProjectBlogPost";
 import Footer from "@/components/Footer";
 import CTA from "@/components/CTA";
+import { listCategories, listTags } from "@/stores/ProjectStore";
 import { getCollection } from "astro:content";
 
-const projects = await getCollection("projects");
-const sortedProjects = projects.sort((a, b) => {
-  const totalA = a.data.totalLikes + a.data.totalComments;
-  const totalB = b.data.totalLikes + b.data.totalComments;
-  return totalB - totalA;
-});
-
-const category = ["conference", "workshop", "seminar", "competition"];
-const tags = [
-  "Blockchain",
-  "Supply Chain",
-  "Open Source",
-  "Cybersecurity",
-  "IoT",
-  "AI",
-  "Healthcare",
-  "Remote Work",
-  "Collaboration",
-  "VR",
-  "Education",
-];
+const project = await getCollection("projects");
+const categories = listCategories(project);
+const tags = listTags(project);
 ---
 
 <MainLayout seo={{ title: "Project" }}>
@@ -37,11 +20,12 @@ const tags = [
     title="Open Source Projects"
     description="Discover and contribute to innovative and impactful open source projects. Innovatech highlights leading open source initiatives that you can learn from, use, and help develop to collectively advance technology."
     inspire="Create project or Contribute"
-    categories={category}
+    categories={categories}
+    tags={tags}
     client:only
   />
   <ProjectTrending client:only />
-  <ProjectBlogPost category={category} tags={tags} client:load />
+  <ProjectBlogPost categories={categories} tags={tags} client:load />
   <CTA
     headline="Be Part of the Innovation"
     description="Collaborate on leading open source projects and help advance technology. "

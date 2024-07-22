@@ -1,7 +1,17 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { atom } from 'nanostores';
 
+export const listCategories = (articles: CollectionEntry<"articles">[]) => {
+    const categories = articles.map(a => a.data.category);
+    const uniqueCategories = [...new Set(categories)];
+    return uniqueCategories;
+};
 
+export const listTags = (articles: CollectionEntry<"articles">[]) => {
+    const tags = articles.map(a => a.data.tags).flat();
+    const uniqueTags = [...new Set(tags)];
+    return uniqueTags;
+};
 export const $articlesAtom = atom<CollectionEntry<"articles">[]>(await getCollection("articles"));
 export const $selectedCategoryAtom = atom<string>("");
 export const $searchAtom = atom<string>("");

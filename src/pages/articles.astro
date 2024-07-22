@@ -6,22 +6,12 @@ import ArticleTrending from "@/components/ArticlePageSection/ArticleTrending";
 import Footer from "@/components/Footer";
 import ArticleBlogPost from "@/components/ArticlePageSection/ArticleBlogPost";
 import CTA from "@/components/CTA";
+import { listCategories, listTags } from "@/stores/ArticleStore";
+import { getCollection } from "astro:content";
 
-const category = ["Education", "Productivity", "Technology", "Business"];
-
-const tags = [
-  "Blockchain",
-  "Supply Chain",
-  "Open Source",
-  "Cybersecurity",
-  "IoT",
-  "AI",
-  "Healthcare",
-  "Remote Work",
-  "Collaboration",
-  "VR",
-  "Education",
-];
+const article = await getCollection("articles");
+const categories = listCategories(article);
+const tags = listTags(article);
 ---
 
 <MainLayout seo={{ title: "Articles" }}>
@@ -30,12 +20,12 @@ const tags = [
     title="Articles"
     description="Explore the latest and most popular articles on digital innovation, technology trends, and open source projects. Stay updated with in-depth insights from industry experts and tech practitioners."
     inspire="Get Insights"
-    categories={category}
+    categories={categories}
     tags={tags}
     client:only
   />
   <ArticleTrending client:only />
-  <ArticleBlogPost category={category} tags={tags} client:load />
+  <ArticleBlogPost categories={categories} tags={tags} client:load />
   <CTA
     headline="Share Your Knowledge"
     withButton

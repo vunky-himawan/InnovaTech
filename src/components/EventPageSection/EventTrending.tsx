@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import Text from "@/utils/textReveal";
 import type { CollectionEntry } from "astro:content";
 import { UserData } from "@/data/UserData";
-import {  motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import Tag from "../Tag";
 import { $eventsAtom } from "@/stores/EventStore";
 import { useStore } from "@nanostores/react";
+import moment from "moment";
 
 
 const EventTrending = () => {
@@ -13,10 +14,6 @@ const EventTrending = () => {
     const sortedEvents = [...event].sort((a, b) => {
         const totalA = a.data.totalLikes + a.data.totalComments;
         const totalB = b.data.totalLikes + b.data.totalComments;
-
-        if (totalA === totalB) {
-            return new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
-        }
         return totalB - totalA;
     });
 
@@ -83,7 +80,9 @@ const EventTrending = () => {
                                 cover={event.data.cover}
                                 title={event.data.title}
                                 description={event.data.description}
-                                date={new Date(event.data.date)}
+                                registration={event.data.timeline.registration}
+                                eventStartDate={event.data.timeline.start}
+                                timezone={event.data.timeline.timezone}
                                 category={event.data.category}
                             />
                         ))
@@ -101,7 +100,9 @@ type CardProps = {
     cover: string;
     title: string;
     description: string;
-    date: Date;
+    registration?: { start: Date; end: Date }[];
+    eventStartDate?: Date;
+    timezone: string;
     category?: string;
 };
 
@@ -111,7 +112,9 @@ const Card = ({
     cover,
     title,
     description,
-    date,
+    registration,
+    eventStartDate,
+    timezone,
     category,
 }: CardProps) => {
     const user = UserData.find((user) => user.userId === userId);
@@ -180,6 +183,11 @@ const Card = ({
         };
     }, [cardRef]);
 
+    const registrationEndDate = registration?.reduce((latestEndDate, period) => {
+        const endDate = new Date(period.end);
+        return endDate > new Date(latestEndDate) ? endDate : latestEndDate;
+    }, new Date(0));
+
     return (
         <motion.div
             ref={cardRef}
@@ -217,12 +225,20 @@ const Card = ({
                         {title}
                     </motion.h1>
                     <p className="text-gray-300 mb-4">by {user?.name}</p>
-                    <p className="text-gray-400">{date.toDateString()}</p>
+                    {/* <p className="text-gray-400">{date.toDateString()}</p> */}
                     <p className="text-gray-300 mt-4 line-clamp-2">{description}</p>
                     <div className="flex items-center">
                         {
                             category && <Tag text={category} className="mt-4 bg-gray-blue" />
                         }
+                    </div>
+                    <div className="mt-4 space-y-1">
+                        <p className="text-lg text-white">
+                            <span className="font-bold">Registration Ends:</span> {moment(registrationEndDate).zone(timezone).format('DD MMM YYYY')}
+                        </p>
+                        <p className="text-lg text-white">
+                            <span className="font-bold">Event Starts:</span> { moment(eventStartDate).zone(timezone).format('DD MMM YYYY')}
+                        </p>
                     </div>
                 </div>
             </motion.div>

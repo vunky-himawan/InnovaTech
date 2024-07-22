@@ -40,6 +40,7 @@ const ArtilcleTrending = () => {
                             cover={sortedArticles[0].data.cover}
                             title={sortedArticles[0].data.title}
                             description={sortedArticles[0].data.description}
+                            trending={1}
                             colspan="lg:col-span-3"
                             duration={2000}
                         />
@@ -51,6 +52,7 @@ const ArtilcleTrending = () => {
                             cover={article.data.cover}
                             title={article.data.title}
                             description={article.data.description}
+                            trending={index + 1}
                             duration={3000 + index * 500}
                         />
                     ))}
@@ -65,10 +67,11 @@ type CardProps = {
     cover: string;
     title: string;
     description: string;
+    trending?: number;
     colspan?: string;
     duration?: number;
 };
-const Card = ({ slug, cover, title, description, colspan, duration }: CardProps) => {
+const Card = ({ slug, cover, title, description, trending, colspan, duration }: CardProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const [loadedImage, setLoadedImage] = useState<string | null>(null);
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -99,24 +102,29 @@ const Card = ({ slug, cover, title, description, colspan, duration }: CardProps)
         <div
             className={`h-[400px] xl:h-[600px] rounded-lg shadow-lg cursor-pointer relative overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-105 ${colspan}`}
         >
-            {isLoading ? (
-                <Skeleton />
-            ) : (
-                <img
-                    src={loadedImage || ''}
-                    alt={title}
-                    className="absolute inset-0 w-full h-full object-cover rounded-lg transition-opacity duration-500 ease-in-out"
-                    style={{ opacity: imageLoaded ? 1 : 0 }}
-                />
-            )}
-            <div className="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black via-transparent to-transparent">
-                <h2 className={`text-2xl font-bold text-white transition-opacity duration-500 line-clamp-1 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-                    {title}
-                </h2>
-                <p className={`text-lg text-white transition-opacity duration-500 line-clamp-2 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-                    {description}
-                </p>
-            </div>
+            <a href={`/article/${slug}`} className="block w-full h-full relative">
+                {isLoading ? (
+                    <Skeleton />
+                ) : (
+                    <img
+                        src={loadedImage || ''}
+                        alt={title}
+                        className="absolute inset-0 w-full h-full object-cover rounded-lg transition-opacity duration-500 ease-in-out"
+                        style={{ opacity: imageLoaded ? 1 : 0 }}
+                    />
+                )}
+                <div className="absolute inset-0 p-5 flex flex-col justify-end bg-gradient-to-t from-black via-transparent to-transparent">
+                    <h1 className={`text-4xl font-bold text-white transition-opacity duration-500 line-clamp-1 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+                        {title}
+                    </h1>
+                    <p className={`text-white text-lg font-semibold transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+                        Trending #{trending}
+                    </p>
+                    <p className={`text-lg text-white transition-opacity duration-500 line-clamp-2 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+                        {description}
+                    </p>
+                </div>
+            </a>
         </div>
     );
 };
