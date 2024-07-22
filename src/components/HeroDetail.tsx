@@ -1,64 +1,70 @@
-import Background from "../Background";
-import Button from "../Button";
+import Background from "./Background";
 import Text from "@/utils/textReveal";
 import { motion } from "framer-motion";
+import SearchComponent from "./SearchComponent";
 
-const Hero = () => {
+type HeroDetailProps = {
+  title: string;
+  description: string;
+  inspire: string;
+  categories?: string[];
+  tags?: string[];
+};
+
+const HeroDetail = ({ title, description, inspire, categories, tags }: HeroDetailProps) => {
   return (
     <>
       <section className="h-fit relative bg-primary overflow-hidden">
         <Light />
         <Background />
-        <div className="w-screen max-w-1800px mx-auto h-screen sm:max-lg:landscape:h-[200vh] relative text-white flex flex-col justify-center items-center gap-5 p-5 overflow-hidden">
+        <div className="w-screen max-w-1800px mx-auto h-screen sm:max-lg:landscape:h-[200vh] relative text-white flex flex-col justify-center items-center md:gap-12 gap-6 p-5 overflow-hidden">
           <div className="flex justify-center items-center">
-            <Rules />
+            <Inspire inspire={inspire} />
           </div>
           <Text
-            input="Join the Open Source Movement"
+            input={title}
             duration={0.05}
             className={`text-center max-md:text-4xl 2xl:text-5rem font-cabinet md:text-6xl font-bold relative z-2 overflow-hidden`}
           />
           <Text
-            input="Contribute to and learn from the vibrant open-source community. Our curated articles and project highlights keep you informed and engaged with the latest trends and opportunities in open source."
+            input={description}
             duration={0.02}
             className="text-center relative z-2 md:text-lg 2xl:text-2xl xl:max-w-3xl"
           />
-          <a href="" className="flex items-center justify-center">
-            <Button
-              color="bg-primary before:content-[''] before:w-full before:h-10rem 2xl:before:h-20vh 2xl:before:-top-25 before:absolute  before:-top-15 before:-left-1 before:bg-[radial-gradient(30%_100%_at_50%_50%,_#05CD77_0%,_rgba(6,_205,_119,_0.00)_100%)] before:-rotate-55"
-              border="rounded-md border border-secondary/50"
-            >
-              Contribute Now
-            </Button>
-          </a>
+          <SearchComponent searchInput="" placeHolder="Search Keyword" className="max-w-2xl w-full bg-primary border-secondary/50 text-seccondary" />
+          <div className="flex flex-wrap gap-2 justify-center items-center mt-5">
+            {categories && categories.map((category, index) => (
+              <div key={index} className="bg-white/10 rounded-full text-secondary py-2 px-6 md:text-xl text-md">
+                {category}
+              </div>
+            ))}
+            {tags && tags.map((tag, index) => (
+              <div key={index} className="bg-white/10 rounded-full text-secondary py-2 px-6 md:text-xl text-md">
+                #{tag}
+              </div>  
+            ))}
+          </div>
         </div>
       </section>
     </>
   );
 };
 
-const Rules = () => {
+const Inspire = ({ inspire }: { inspire: string }) => {
   return (
     <>
       <div className="flex max-lg:flex-col justify-center items-center">
         <Square>
-          <div className="i-heroicons:book-open-20-solid w-5 h-5 2xl:w-2rem 2xl:h-2rem"></div>
-          Reading
-        </Square>
-        <div className="max-lg:h-[3rem] max-lg:w-fit lg:w-[5rem] lg:h-fit border-secondary max-lg:border-l lg:border-b border-dashed  shadow-[0px_0px_2.8px_0px_#05CD77]" />
-        <Square>
           <div className="i-heroicons-solid:light-bulb w-5 h-5 2xl:w-2rem 2xl:h-2rem"></div>
-          Get Insight
-        </Square>
-        <div className="max-lg:h-[3rem] max-lg:w-fit lg:w-[5rem] lg:h-[0px] border-secondary max-lg:border-l lg:border-b border-dashed  shadow-[0px_0px_2.8px_0px_#05CD77]" />
-        <Square>
-          <div className="i-heroicons:code-bracket-20-solid w-5 h-5 2xl:w-2rem 2xl:h-2rem"></div>
-          Contribute or Create Project
+          <span className="text-md">
+            {inspire}
+          </span>
         </Square>
       </div>
     </>
   );
-};
+}
+
 
 type SquareProps = {
   children: React.ReactNode;
@@ -123,4 +129,4 @@ const Light = () => {
   );
 };
 
-export default Hero;
+export default HeroDetail;

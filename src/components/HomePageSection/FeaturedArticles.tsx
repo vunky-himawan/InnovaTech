@@ -167,7 +167,6 @@ const Content = ({ data, slug }: ContentProps) => {
               ease: "linear",
               type: "spring",
             }}
-            // onViewportEnter={() => setHasAnimated(true)}
             className="flex flex-col md:p-3 justify-center items-center h-fit md:h-full gap-5"
           >
             {isMobile && (
