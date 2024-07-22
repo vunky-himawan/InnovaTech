@@ -13,7 +13,6 @@ import { useStore } from '@nanostores/react';
 import { $filteredProjectsAtom, $searchAtom, $selectedCategoryAtom, $selectedTagAtom, setSearch, setSelectedCategory, setSelectedTags } from '@/stores/ProjectStore';
 
 type FeaturedProjectsProps = {
-  projects: CollectionEntry<"projects">[];
   category: string[];
   tags?: string[];
 };

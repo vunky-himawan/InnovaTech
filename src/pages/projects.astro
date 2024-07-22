@@ -1,7 +1,7 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Header from "@/components/Header";
-import HeroDetail from "@/components/HeroDetail";
+import Hero from "@/components/ProjectPageSection/Hero";
 import ProjectTrending from "@/components/ProjectPageSection/ProjectTrending";
 import ProjectBlogPost from "@/components/ProjectPageSection/ProjectBlogPost";
 import Footer from "@/components/Footer";
@@ -33,15 +33,15 @@ const tags = [
 
 <MainLayout seo={{ title: "Project" }}>
   <Header client:only />
-  <HeroDetail
+  <Hero
     title="Open Source Projects"
     description="Discover and contribute to innovative and impactful open source projects. Innovatech highlights leading open source initiatives that you can learn from, use, and help develop to collectively advance technology."
     inspire="Create project or Contribute"
     categories={category}
     client:only
   />
-  <ProjectTrending projects={sortedProjects} client:only />
-  <ProjectBlogPost projects={projects} category={category} client:only />
+  <ProjectTrending client:only />
+  <ProjectBlogPost category={category} tags={tags} client:load />
   <CTA
     headline="Be Part of the Innovation"
     description="Collaborate on leading open source projects and help advance technology. "
