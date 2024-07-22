@@ -7,7 +7,6 @@ type TabbarProps = {
 };
 
 const Tabbar = ({ category, selectedCategory = "", callback }: TabbarProps) => {
-    const [selected, setSelected] = useState(selectedCategory);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -38,13 +37,9 @@ const Tabbar = ({ category, selectedCategory = "", callback }: TabbarProps) => {
     };
 
     const handleClickTab = (item: string) => {
-        setSelected(prev => {
-            const newSelected = prev === item ? "" : item;
-            if (callback) {
-                callback(newSelected);
-            }
-            return newSelected;
-        });
+        if (callback) {
+            callback(item);
+        }
     };
 
     return (
@@ -60,7 +55,7 @@ const Tabbar = ({ category, selectedCategory = "", callback }: TabbarProps) => {
             <div className="flex flex-nowrap">
                 {/* all */}
                 <button
-                    className={`px-4 py-4 mx-4 min-w-max font-medium ${selected === "" ? "border-b-2 border-black text-black" : "text-gray-500"}`}
+                    className={`px-4 py-4 mx-4 min-w-max font-medium ${selectedCategory === "" ? "border-b-2 border-black text-black" : "text-gray-500"}`}
                     onClick={() => handleClickTab("")}
                 >
                     All
@@ -69,7 +64,7 @@ const Tabbar = ({ category, selectedCategory = "", callback }: TabbarProps) => {
                 {category.map((item, index) => (
                     <button
                         key={index}
-                        className={`px-4 py-4 mx-4 min-w-max font-medium ${selected === item ? "border-b-2 border-black text-black" : "text-gray-500"}`}
+                        className={`px-4 py-4 mx-4 min-w-max font-medium ${selectedCategory === item ? "border-b-2 border-black text-black" : "text-gray-500"}`}
                         onClick={() => handleClickTab(item)}
                     >
                         {item}

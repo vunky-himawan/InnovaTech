@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 type FilterProps = {
     title: string;
     list: string[];
@@ -9,45 +10,28 @@ type FilterProps = {
 
 const Filter = ({ title, list, select, callback }: FilterProps) => {
     const [isSeeAll, setIsSeeAll] = useState(false);
-    const [selected, setSelected] = useState(
-        Array.isArray(select) ? select : select ? [select] : ""
-    );
-
 
     const handleSelected = (item: string) => {
-        setSelected(prevSelected => {
-            let newSelected;
-            if (Array.isArray(prevSelected)) {
-                newSelected = prevSelected.includes(item)
-                    ? prevSelected.filter((s) => s !== item)
-                    : [...prevSelected, item];
+        let newSelect;
+        if (Array.isArray(select)) {
+            if (select.includes(item)) {
+                newSelect = select.filter((s) => s !== item);
             } else {
-                newSelected = prevSelected === item ? "" : item;
+                newSelect = [...select, item];
             }
-
-            if (callback) {
-                callback(newSelected);
-            }
-
-            return newSelected;
-        });
+        } else {
+            newSelect = select === item ? "" : item;
+        }
+        if (callback) {
+            callback(newSelect);
+        }
     };
 
     const handleClear = () => {
-        setSelected(prevSelected => {
-            let newSelected;
-            if (Array.isArray(prevSelected)) {
-                newSelected = [];
-            } else {
-                newSelected = "";
-            }
-
-            if (callback) {
-                callback(newSelected);
-            }
-
-            return newSelected;
-        });
+        let newSelect = Array.isArray(select) ? [] : "";
+        if (callback) {
+            callback(newSelect);
+        }
     };
 
     return (
@@ -63,8 +47,7 @@ const Filter = ({ title, list, select, callback }: FilterProps) => {
                 {(isSeeAll ? list : list.slice(0, 5)).map((l, index) => (
                     <div
                         key={index}
-                        className={`bg-gray-100 py-2 px-4 m-2 rounded-full font-normal text-sm lg:text-xl ${selected.includes(l) ? "bg-primary text-white" : ""
-                            }`}
+                        className={`bg-gray-100 py-2 px-4 m-2 rounded-full font-normal cursor-pointer text-sm lg:text-xl ${select?.includes(l) ? "bg-primary text-white" : ""}`}
                         onClick={() => handleSelected(l)}
                     >
                         {l}
@@ -72,7 +55,11 @@ const Filter = ({ title, list, select, callback }: FilterProps) => {
                 ))}
             </div>
             {
-                selected.length > 0 && (
+                select && Array.isArray(select) ? select.length > 0 && (
+                    <div className="flex justify-end mt-2">
+                        <button onClick={handleClear} className="text-primary">Clear</button>
+                    </div>
+                ) : select && (
                     <div className="flex justify-end mt-2">
                         <button onClick={handleClear} className="text-primary">Clear</button>
                     </div>
@@ -81,5 +68,6 @@ const Filter = ({ title, list, select, callback }: FilterProps) => {
         </div>
     );
 };
+
 
 export default Filter;

@@ -1,17 +1,11 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Header from "@/components/Header";
-import HeroDetail from "@/components/HeroDetail";
+import Hero from "@/components/ArticlePageSection/Hero";
 import ArticleTrending from "@/components/ArticlePageSection/ArticleTrending";
 import Footer from "@/components/Footer";
 import ArticleBlogPost from "@/components/ArticlePageSection/ArticleBlogPost";
 import CTA from "@/components/CTA";
-import { getCollection } from "astro:content";
-
-const articles = await getCollection("articles");
-const sortedArticles = articles.sort(
-  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime() 
-);
 
 const category = ["Education", "Productivity", "Technology", "Business"];
 
@@ -32,7 +26,7 @@ const tags = [
 
 <MainLayout seo={{ title: "Articles" }}>
   <Header client:only />
-  <HeroDetail
+  <Hero
     title="Articles"
     description="Explore the latest and most popular articles on digital innovation, technology trends, and open source projects. Stay updated with in-depth insights from industry experts and tech practitioners."
     inspire="Get Insights"
@@ -40,8 +34,8 @@ const tags = [
     tags={tags}
     client:only
   />
-  <ArticleTrending articles={sortedArticles} client:only />
-  <ArticleBlogPost articles={sortedArticles} category={category} tags={tags} client:only />
+  <ArticleTrending client:only />
+  <ArticleBlogPost category={category} tags={tags} client:load />
   <CTA
     headline="Share Your Knowledge"
     withButton

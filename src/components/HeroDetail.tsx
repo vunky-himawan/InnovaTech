@@ -9,9 +9,34 @@ type HeroDetailProps = {
   inspire: string;
   categories?: string[];
   tags?: string[];
+  searchInput?: string;
+  placeHolder?: string;
+  searchCallback?: (search: string) => void;
+  selectTags?: string[];
+  tagsCallback?: (tag: string[]) => void;
+  selectCategories?: string | string[];
+  categoriesCallback?: (category: string) => void;
 };
 
-const HeroDetail = ({ title, description, inspire, categories, tags }: HeroDetailProps) => {
+const HeroDetail = ({ title, description, inspire, categories, tags, searchInput, placeHolder, searchCallback, selectTags, tagsCallback, selectCategories, categoriesCallback }: HeroDetailProps) => {
+
+  const handleTagClick = (tag: string) => {
+    let updatedTags;
+    if (selectTags?.includes(tag)) {
+      updatedTags = selectTags?.filter(t => t !== tag);
+    } else {
+      updatedTags = [...(selectTags || []), tag];
+    }
+    if (tagsCallback) {
+      tagsCallback(updatedTags);
+    }
+  }
+
+  const handleCategoryClick = (category: string) => {
+    if (categoriesCallback) {
+      categoriesCallback(category);
+    }
+  }
   return (
     <>
       <section className="h-fit relative bg-primary overflow-hidden">
@@ -31,17 +56,18 @@ const HeroDetail = ({ title, description, inspire, categories, tags }: HeroDetai
             duration={0.02}
             className="text-center relative z-2 md:text-lg 2xl:text-2xl xl:max-w-3xl"
           />
-          <SearchComponent searchInput="" placeHolder="Search Keyword" className="max-w-2xl w-full bg-primary border-secondary/50 text-seccondary" />
+          <SearchComponent searchInput={searchInput} callback={searchCallback} placeHolder="Search Keyword" className="max-w-2xl w-full bg-primary border-secondary/50 text-seccondary" />
           <div className="flex flex-wrap gap-2 justify-center items-center mt-5">
             {categories && categories.map((category, index) => (
-              <div key={index} className="bg-white/10 rounded-full text-secondary py-2 px-6 md:text-xl text-md">
+              <div key={index} className={`bg-white/10 rounded-full cursor-pointer text-secondary py-2 px-6 md:text-xl text-md ${selectCategories?.includes(category) ? "bg-primary text-white" : ""}`} onClick={() => handleCategoryClick(category)}>
                 {category}
               </div>
+
             ))}
             {tags && tags.map((tag, index) => (
-              <div key={index} className="bg-white/10 rounded-full text-secondary py-2 px-6 md:text-xl text-md">
+              <div key={index} className={`bg-white/10 rounded-full cursor-pointer text-secondary py-2 px-6 md:text-xl text-md ${selectTags?.includes(tag) ? "bg-primary text-white" : ""}`} onClick={() => handleTagClick(tag)}>
                 #{tag}
-              </div>  
+              </div>
             ))}
           </div>
         </div>

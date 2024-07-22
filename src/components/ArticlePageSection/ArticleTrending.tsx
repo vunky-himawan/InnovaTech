@@ -1,14 +1,12 @@
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Text from "@/utils/textReveal";
-import type { CollectionEntry } from "astro:content";
+import { useStore } from "@nanostores/react";
+import { $articlesAtom } from "@/stores/ArticleStore";
 
 
-type FeaturedArticlesProps = {
-    articles: CollectionEntry<"articles">[];
-};
-const ArtilcleTrending = ({ articles }: FeaturedArticlesProps) => {
-    const [article, setArticles] = useState<CollectionEntry<"articles">[]>(articles);
+const ArtilcleTrending = () => {
+    const article = useStore($articlesAtom);
     const sortedArticles = [...article].sort((a, b) => {
         const totalA = a.data.totalLikes + a.data.totalComments;
         const totalB = b.data.totalLikes + b.data.totalComments;
@@ -99,7 +97,7 @@ const Card = ({ slug, cover, title, description, colspan, duration }: CardProps)
 
     return (
         <div
-            className={`h-[400px] xl:h-[600px] rounded-lg shadow-lg relative overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-105 ${colspan}`}
+            className={`h-[400px] xl:h-[600px] rounded-lg shadow-lg cursor-pointer relative overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-105 ${colspan}`}
         >
             {isLoading ? (
                 <Skeleton />

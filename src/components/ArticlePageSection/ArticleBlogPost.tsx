@@ -6,76 +6,55 @@ import type { CollectionEntry } from 'astro:content';
 import { motion } from 'framer-motion';
 import Filter from '../Filter';
 import SearchComponent from '../SearchComponent';
+import { $filteredArticlesAtom,  $searchAtom, $selectedCategoryAtom, $selectedTagAtom, setSearch, setSelectedCategory, setSelectedTags } from '@/stores/ArticleStore';
+import { useStore } from '@nanostores/react';
 
 type FeaturedArticlesProps = {
-  articles: CollectionEntry<"articles">[];
   category: string[];
   tags?: string[];
 };
 
-const ArticleBlogPost = ({ articles, category, tags }: FeaturedArticlesProps) => {
-  const [filteredArticles, setFilteredArticles] = useState<CollectionEntry<"articles">[]>(articles);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
-  const handleTopicChange = (selected: string) => {
-    setSelectedCategory(selected);
-  };
-
-  const handleTagChange = (selected: string[]) => {
-    setSelectedTags(selected);
-  };
-
-  useEffect(() => {
-    let result = articles;
-
-    if (search) {
-      result = result.filter((article) =>
-        article.data.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (selectedCategory) {
-      result = result.filter((article) =>
-        Array.isArray(selectedCategory)
-          ? selectedCategory.includes(article.data.category)
-          : article.data.category === selectedCategory
-      );
-    }
-
-    if (selectedTags.length > 0) {
-      result = result.filter((article) =>
-        selectedTags.every(tag => article.data.tags?.includes(tag))
-      );
-    }
-
-    setFilteredArticles(result);
-  }, [search, selectedCategory, selectedTags]);
+const ArticleBlogPost = ({ category, tags }: FeaturedArticlesProps) => {
+  const store = useStore($filteredArticlesAtom);
+  const search = useStore($searchAtom);
+  const selectCategory = useStore($selectedCategoryAtom);
+  const selectTags = useStore($selectedTagAtom);
 
 
-  useEffect(() => {
-    setFilteredArticles(articles);
-  }, [articles]);
 
   return (
     <section className="gap-5 max-w-[1800px] w-screen mx-auto p-5 my-10 ">
       <div className="grid grid-cols-3 gap-5 mt-15">
         <div className="col-span-3 xl:col-span-2 gap-5">
-          <Tabbar category={category} selectedCategory={selectedCategory} callback={setSelectedCategory} />
+          <Tabbar category={category} selectedCategory={selectCategory} callback={setSelectedCategory} />
           <div className="grid grid-cols-span-1 xl:grid-cols-2 gap-5 my-5">
-            {filteredArticles.length === 0 ? (
+            {store.length === 0 ? (
               <div>No articles found</div>
-            ) : (filteredArticles.map((article, index) => (
-              <Card key={article.id} title={article.data.title} pubDate={article.data.pubDate} cover={article.data.cover} description={article.data.description} totalLikes={article.data.totalLikes} totalComments={article.data.totalComments} authorId={article.data.authorId} slug={article.slug} colSpan={(index + 1) % 3 === 0 ? 2 : 1} />
-            )))}
+            ) : (
+              store.map((article, index) => (
+                <Card
+                  key={article.id}
+                  title={article.data.title}
+                  pubDate={article.data.pubDate}
+                  cover={article.data.cover}
+                  description={article.data.description}
+                  totalLikes={article.data.totalLikes}
+                  totalComments={article.data.totalComments}
+                  authorId={article.data.authorId}
+                  slug={article.slug}
+                  colSpan={(index + 1) % 3 === 0 ? 2 : 1}
+                />
+              ))
+            )}
           </div>
         </div>
         <div className="col-span-3 xl:col-span-1 order-first xl:order-last">
-          <SearchComponent placeHolder="Search Article" searchInput={search} callback={setSearch} />
+          <SearchComponent
+            searchInput={search}
+            placeHolder="Search Article" callback={setSearch} />
           <div className="col-span-3 xl:col-span-1 space-y-20 my-10">
-            {tags && <Filter title="Popular Tags" list={tags} select={[]} callback={handleTagChange} />}
-            {/* {category && <Filter title="Popular Category" list={category} select={""} callback={handleTopicChange} />} */}
+            {tags && <Filter title="Popular Tags" list={tags} select={selectTags} callback={setSelectedTags} />}
+            {category && <Filter title="Popular Category" list={category} select={selectCategory} callback={setSelectedCategory} />}
           </div>
         </div>
       </div>
@@ -147,7 +126,7 @@ const Card = ({
   return (
     <motion.div
       ref={cardRef}
-      className={`flex flex-col ${colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1'} bg-gray-blue p-5 rounded-xl gap-3 md:gap-5 shadow-lg relative`}
+      className={`flex flex-col ${colSpan === 2 ? 'md:col-span-2' : 'md:col-span-1'} bg-gray-blue p-5 rounded-xl gap-3 md:gap-5 cursor-pointer shadow-lg relative`}
       style={{ scale, rotate }}
       whileHover={{ scale: 1.05, rotate: 4, boxShadow: '0 15px 25px rgba(0, 0, 0, 0.3)' }}
       transition={{ duration: 0.3 }}
