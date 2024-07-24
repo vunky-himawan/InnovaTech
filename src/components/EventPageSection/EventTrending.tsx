@@ -197,7 +197,8 @@ const Card = ({
       }}
       transition={{ duration: 0.5 }}
     >
-      <motion.div
+      <motion.a
+        href={`/event/${slug}`}
         className="relative h-full w-full bg-gray-900 rounded-xl overflow-hidden"
         style={{ transformStyle: "preserve-3d" }}
       >
@@ -244,7 +245,7 @@ const Card = ({
             </p>
           </div>
         </div>
-      </motion.div>
+      </motion.a>
     </motion.div>
   );
 };
