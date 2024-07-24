@@ -26,8 +26,11 @@ const projectCollection = defineCollection({
     description: z.string(),
     cover: z.string(),
     github: z.string(),
+    category: z.string(),
+    tags: z.array(z.string()),
     totalLikes: z.number(),
     totalComments: z.number(),
+    totalContributor: z.number(),
     authorId: z.string(),
   }),
 });

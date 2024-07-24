@@ -1,7 +1,37 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
+import Header from "@/components/Header";
+import Hero from "@/components/EventPageSection/Hero";
+import EventTrending from "@/components/EventPageSection/EventTrending";
+import Footer from "@/components/Footer";
+import EventBlogPost from "@/components/EventPageSection/EventBlogPost";
+import CTA from "@/components/CTA";
+import { getCollection } from "astro:content";
+import { listCategories } from "@/stores/EventStore";
+
+const events = await getCollection("events");
+const categories = listCategories(events);
+
 ---
 
 <MainLayout seo={{ title: "Events" }}>
-  <h1>INI Events</h1>
-</MainLayout>`;
+  <Header client:only />
+  <Hero
+    title="Events"
+    description="Participate in the latest technology events and competitions hosted by Innovatech. From annual summits to hackathons and panel discussions, find opportunities to learn, network, and innovate with tech professionals."
+    inspire="Problem Solving"
+    categories={categories}
+    client:only
+  />
+  <EventTrending client:only />
+  <EventBlogPost
+    categories={categories}
+    client:only
+  />
+  <CTA
+    headline="Don’t Miss Out"
+    description="Participate in our upcoming events to learn, network, and innovate."
+    client:only
+  />
+  <Footer client:only />
+</MainLayout>

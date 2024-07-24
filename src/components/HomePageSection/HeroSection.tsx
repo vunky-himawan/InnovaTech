@@ -85,7 +85,7 @@ const Square = ({ children }: SquareProps) => {
           borderRadius: "0.5rem",
           backgroundClip: "padding-box, border-box",
           backgroundOrigin: "padding-box, border-box",
-          padding: "0.5rem",
+          padding: "0.5rem 1rem",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
