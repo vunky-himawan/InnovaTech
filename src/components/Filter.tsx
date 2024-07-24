@@ -47,7 +47,7 @@ const Filter = ({ title, list, select, callback }: FilterProps) => {
                 {(isSeeAll ? list : list.slice(0, 5)).map((l, index) => (
                     <div
                         key={index}
-                        className={`bg-gray-100 py-2 px-4 m-2 rounded-full font-normal cursor-pointer text-sm lg:text-xl ${select?.includes(l) ? "bg-primary text-white" : ""}`}
+                        className={`bg-gray-100 py-2 px-4 m-2 rounded-full font-normal cursor-pointer capitalize text-sm lg:text-xl ${select?.includes(l) ? "bg-primary text-white" : ""}`}
                         onClick={() => handleSelected(l)}
                     >
                         {l}

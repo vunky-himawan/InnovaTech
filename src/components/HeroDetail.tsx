@@ -71,7 +71,7 @@ const HeroDetail = ({ title, description, inspire, categories, tags, searchInput
             className="text-center relative z-2 md:text-lg 2xl:text-2xl xl:max-w-3xl"
           />
           <SearchComponent searchInput={searchInput} callback={searchCallback} placeHolder="Search Keyword" className="max-w-2xl w-full bg-primary border-secondary/50 text-seccondary" />
-          <div className="flex flex-wrap gap-2 justify-center items-center mt-5">
+          <div className="flex flex-wrap gap-2 justify-center items-center mt-5 capitalize">
             {categories && categories.map((category, index) => (
               <div key={index} className={`bg-white/10 rounded-full cursor-pointer text-secondary py-2 px-6 md:text-xl text-md ${selectCategories?.includes(category) ? "bg-primary text-white" : ""}`} onClick={() => handleCategoryClick(category)}>
                 {category}

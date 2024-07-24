@@ -164,7 +164,7 @@ const Card = ({
           </div>
         </div>
       </div>
-      <p className="text-gray-400 line-clamp-3 min-h-[4.5em]">{description} </p>
+      <p className="text-gray-400 line-clamp-3 min-h-[4.5em]">{description}</p>
     </motion.div>
   </a>
   );

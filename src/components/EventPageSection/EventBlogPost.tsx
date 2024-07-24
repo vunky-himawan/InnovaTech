@@ -156,7 +156,7 @@ const Card = ({
           {eventStartDate && <p className="text-gray-400">Event starts on {moment(eventStartDate).zone(timezone).format('DD MMM YYYY')}</p>}
         </div>
         <div className="flex items-center gap-3">
-          <Tag text={category} className='bg-gray-200 xl:text-xl text-sm' />
+          <Tag text={category} className='bg-gray-200 xl:text-xl text-sm capitalize' />
         </div>
         <p className="text-gray-400 line-clamp-3 min-h-[4.5em]">{description}</p>
       </motion.div>

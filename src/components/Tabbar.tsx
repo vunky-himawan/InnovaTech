@@ -64,7 +64,7 @@ const Tabbar = ({ category, selectedCategory = "", callback }: TabbarProps) => {
                 {category.map((item, index) => (
                     <button
                         key={index}
-                        className={`px-4 py-4 mx-4 min-w-max font-medium ${selectedCategory === item ? "border-b-2 border-black text-black" : "text-gray-500"}`}
+                        className={`px-4 py-4 mx-4 min-w-max font-medium capitalize ${selectedCategory === item ? "border-b-2 border-black text-black" : "text-gray-500"}`}
                         onClick={() => handleClickTab(item)}
                     >
                         {item}
