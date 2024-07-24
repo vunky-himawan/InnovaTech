@@ -1,0 +1,149 @@
+---
+import { UserData } from "@/data/UserData";
+import MainLayout from "./MainLayout.astro";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { getCollection } from "astro:content";
+import Comment from "@/components/Comment";
+
+const { frontmatter, slug } = Astro.props;
+
+const articles = await getCollection("articles");
+
+const relatedArticles = articles
+  .filter((article) => article.data.articleId !== frontmatter.articleId)
+  .filter((article) => article.data.category === frontmatter.category)
+  .slice(0, 5);
+
+const author = UserData.find((user) => user.userId === frontmatter.authorId);
+---
+
+<MainLayout seo={{ title: frontmatter.title }}>
+  <Header client:only />
+  <div class="flex flex-col gap-5 mx-auto h-fit w-full items-center">
+    <section class="w-full flex flex-col gap-10">
+      <picture class="w-full h-full">
+        <img
+          src={`/images/articles/${slug}/${frontmatter.cover}`}
+          alt=""
+          class="object-cover w-full h-full max-h-65vh"
+        />
+      </picture>
+      <div
+        class="flex flex-col gap-5 mx-auto h-fit w-full items-center min-h-15rem"
+      >
+        <h1 class="text-5xl text-center font-bold">
+          {frontmatter.title}
+        </h1>
+        <div>
+          <div class="flex gap-2 items-center">
+            <picture class="w-9 h-9">
+              <img
+                src={`/images/${author?.profileImage}`}
+                alt=""
+                class="w-full h-full object-cover rounded-full"
+              />
+            </picture>
+            <p>{author?.name}</p>
+          </div>
+        </div>
+        <p class="px-5 py-2 rounded-full bg-gray-blue">
+          {frontmatter.category}
+        </p>
+        <p class="max-w-7xl max-lg:p-5 text-center">
+          {frontmatter.description}
+        </p>
+        <div class="flex gap-5">
+          <div class="flex gap-2 justify-center items-center">
+            <div class="i-ri:heart-fill w-5 h-5 text-red-500"></div>
+            <p>{frontmatter.totalLikes}</p>
+          </div>
+          <div class="flex gap-2 justify-center items-center">
+            <div class="i-ri:chat-3-fill w-5 h-5 text-gray-500"></div>
+            <p>{frontmatter.totalComments}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="max-w-7xl mx-auto h-fit py-15 lg:grid lg:grid-cols-9 flex flex-col gap-5 p-5"
+    >
+      <article class="col-span-6 prose order-1 max-lg:p-5">
+        <slot />
+      </article>
+      <div class="col-span-3 w-full flex flex-col gap-5 order-2">
+        <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+          <h1 class="font-medium text-xl">Published On</h1>
+          <p>
+            {
+              frontmatter.pubDate.toLocaleString("en-US", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })
+            }
+          </p>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+          <h1 class="font-medium text-xl">Last Updated</h1>
+          <p>
+            {
+              frontmatter.lastUpdated.toLocaleString("en-US", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })
+            }
+          </p>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+          <h1 class="font-medium text-xl">Tags</h1>
+          <div class="flex flex-wrap gap-5">
+            {
+              frontmatter.tags.map((tag: string) => (
+                <a
+                  href={`/articles/tag/${tag}`}
+                  class="flex gap-2 items-center py-2 px-3 rounded-full text-sm bg-gray-blue"
+                >
+                  <p class="text-gray-500">{`#${tag}`}</p>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+          <h1 class="font-medium text-xl">Related Articles</h1>
+          <div class="flex flex-col gap-5">
+            {
+              relatedArticles.map((article) => (
+                <div class="flex gap-2 items-center">
+                  {/* <div class="i-ri:book-open-fill w-5 h-5" /> */}
+                  <a href={`/article/${article.slug}`} class="hover:underline">
+                    {article.data.title}
+                  </a>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <section
+        class="max-w-7xl mx-auto h-fit py-10 w-full flex flex-col gap-5 lg:col-span-9 order-3"
+      >
+        <h1 class="font-medium text-xl">
+          Comments ({frontmatter.totalComments})
+        </h1>
+        <Comment client:only />
+      </section>
+    </section>
+    <Footer client:only />
+  </div>
+</MainLayout>

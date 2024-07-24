@@ -1,0 +1,261 @@
+---
+import { UserData } from "@/data/UserData";
+import MainLayout from "./MainLayout.astro";
+import Timer from "@/components/Timer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { getUpcomingEvents } from "@/services/EventService";
+import { InterestedCountButton } from "@/components/InterestedCount";
+import type { CollectionEntry } from "astro:content";
+
+const { frontmatter, slug } = Astro.props;
+
+const author = UserData.find((user) => user.userId === frontmatter.authorId);
+const registrationBatches: number = frontmatter.timeline.registration.length;
+const endOfRegistrationDate: Date = new Date(
+  frontmatter.timeline.registration[registrationBatches - 1].end
+);
+const registrationActive: boolean =
+  endOfRegistrationDate.getTime() > new Date().getTime();
+
+const upcomingEvents: CollectionEntry<"events">[] = getUpcomingEvents(
+  frontmatter.eventId
+);
+
+const contacts: { key: string; value: string }[] = Object.keys(
+  frontmatter.contacts
+)
+  .filter(
+    (key) =>
+      frontmatter.contacts[key] !== null && frontmatter.contacts[key] !== ""
+  )
+  .map((key) => ({
+    key,
+    value: frontmatter.contacts[key],
+  }));
+
+interface ContactIconLink {
+  media: string;
+  link: string;
+}
+
+const contactIconLink = (media: string, link: string): ContactIconLink => {
+  const linkIcon: ContactIconLink = { media: "", link: "" };
+
+  if (media === "email") {
+    linkIcon.media = "i-ri:mail-line";
+    linkIcon.link = `mailto:${link}`;
+  } else if (media === "phone") {
+    linkIcon.media = "i-ri:phone-line";
+    linkIcon.link = `tel:${link}`;
+  } else if (media === "twitter") {
+    linkIcon.media = "i-ri:twitter-x-line";
+    linkIcon.link = `https://twitter.com/${link}`;
+  } else if (media === "website") {
+    linkIcon.media = "i-ri:global-line";
+    linkIcon.link = link;
+  } else if (media === "instagram") {
+    linkIcon.media = `i-ri:instagram-line`;
+    linkIcon.link = `https://instagram.com/${link}`;
+  } else if (media === "linkedin") {
+    linkIcon.media = `i-ri:linkedin-line`;
+    linkIcon.link = `https://linkedin.com/${link}`;
+  } else {
+    linkIcon.media = "i-ri:github-line";
+    linkIcon.link = `https://github.com/${link}`;
+  }
+
+  return linkIcon;
+};
+
+type Registration = {
+  start: Date;
+  end: Date;
+};
+---
+
+<MainLayout seo={{ title: frontmatter.title }}>
+  <Header />
+  <section
+    class="flex flex-col gap-5 lg:grid lg:grid-cols-8 max-w-7xl lg:gap-5 mx-auto h-fit py-24"
+  >
+    <div class="lg:col-span-2 flex flex-col gap-5 max-lg:order-1">
+      <button
+        onclick="window.history.back()"
+        class="flex items-center justify-center gap-2 border border-gray-200 rounded-lg p-5 hover:bg-gray-100 hover:border-primary/20 duration-300"
+      >
+        <div class="i-heroicons:arrow-long-left-solid w-5 h-5"></div>
+        <p class="text-md">Back</p>
+      </button>
+      <div
+        class="flex flex-col gap-3 min-h-25rem border border-gray-200 rounded-lg p-5"
+      >
+        <h1 class="font-medium text-xl">Poster</h1>
+        <picture class="w-full h-full">
+          <img
+            src={`/images/events/${slug}/${frontmatter.cover}`}
+            alt="Poster"
+            class="object-cover w-full h-full max-h-30rem rounded-lg"
+          />
+        </picture>
+        <a
+          href={`/images/events/${slug}/${frontmatter.cover}`}
+          download
+          class="text-blue-5 hover:underline">Download Poster</a
+        >
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Interested Count</h1>
+        <div class="flex flex-col gap-2">
+          <p class="font-medium">
+            {frontmatter.totalInterested} people interested
+          </p>
+        </div>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">More Informations</h1>
+        <div class="flex flex-col gap-2">
+          {
+            contacts.map((contact, index) => {
+              const icon = contactIconLink(
+                contact.key,
+                contact.value
+              ).media.toString();
+              const link = contactIconLink(contact.key, contact.value).link;
+
+              return (
+                <div class="flex gap-3 items-center">
+                  <div class={`${icon.toString()} w-5 h-5`} />
+                  <a
+                    href={link}
+                    target={contacts[index].key == "phone" ? "_top" : "_blank"}
+                    class="capitalize hover:underline"
+                  >
+                    {contacts[index].key}
+                  </a>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+    <div class="lg:col-span-4 flex flex-col gap-5 max-lg:order-3">
+      <div class="p-5 border border-gray-200 rounded-lg flex flex-col gap-5">
+        <div class="flex gap-2 items-center justify-between">
+          <div class="flex gap-2 items-center">
+            <div class="i-heroicons:user-solid w-5 h-5"></div>
+            <p>by {author?.name}</p>
+          </div>
+          <InterestedCountButton client:only />
+        </div>
+        <h1 class="font-medium text-5xl">{frontmatter.title}</h1>
+        <div class="flex gap-2 items-center">
+          <div class="i-heroicons:map-pin-16-solid w-5 h-5"></div>
+          <p>{frontmatter.location}</p>
+        </div>
+        <div>
+          <Timer
+            client:only
+            date={frontmatter.timeline.start}
+            timeZone={frontmatter.timeline.timezone}
+          />
+        </div>
+      </div>
+      <div class="p-5 border border-gray-200 rounded-lg max-lg:w-full">
+        <article class="prose">
+          <slot />
+        </article>
+      </div>
+    </div>
+    <div class="lg:col-span-2 flex flex-col gap-5 max-lg:order-2">
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Timeline</h1>
+        <div class="flex flex-col gap-2">
+          {
+            frontmatter.timeline.registration.map(
+              (registration: Registration, index: number) => (
+                <div>
+                  <p class="font-medium">Registration - Batch {index + 1}:</p>
+                  <p>
+                    {" "}
+                    {registration.start.toLocaleString("en-US", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}{" "}
+                    to{" "}
+                    {registration.end.toLocaleString("en-US", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+              )
+            )
+          }
+        </div>
+        <div>
+          <p class="font-medium">Start:</p>
+          <p>
+            {
+              frontmatter.timeline.start.toLocaleString("en-US", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+            }
+          </p>
+        </div>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">
+          Interest with the event? Register now!
+        </h1>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Registration</h1>
+        <div class="flex flex-col gap-2">
+          {
+            registrationActive ? (
+              <>
+                <p class="font-medium">
+                  {frontmatter.fee === 0 ? "Free" : `Fee: $${frontmatter.fee}`}
+                </p>
+                <p>
+                  Interest with the event?{" "}
+                  <a href="" class="text-blue-5 hover:underline">
+                    {" "}
+                    Register now!{" "}
+                  </a>
+                </p>
+              </>
+            ) : (
+              <p>Registration is closed.</p>
+            )
+          }
+        </div>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">
+          Upcoming Events {new Date().getFullYear()}
+        </h1>
+        <div class="flex flex-col gap-2">
+          {
+            upcomingEvents.map((event) => (
+              <a
+                href={`/event/${event.slug}`}
+                class="flex gap-2 items-center hover:underline"
+              >
+                <div class="i-heroicons:calendar-16-solid w-5 h-5" />
+                <p>{event.data.title}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <Footer />
+</MainLayout>
