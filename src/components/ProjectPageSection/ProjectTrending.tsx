@@ -69,7 +69,6 @@ const ProjectTrending = () => {
                   totalContributors={project.data.totalContributor}
                   totalLikes={project.data.totalLikes}
                   totalComments={project.data.totalComments}
-                  link={project.data.github}
                   tags={project.data.tags}
                 />
               </motion.div>

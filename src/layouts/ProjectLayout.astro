@@ -1,0 +1,108 @@
+---
+import type { UserModel } from "@/models/UserModel";
+import MainLayout from "./MainLayout.astro";
+import { UserData } from "@/data/UserData";
+import { getCollection } from "astro:content";
+import type { ProjectModel } from "@/models/ProjectModel";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+const { frontmatter, slug } = Astro.props;
+
+const author: UserModel | undefined = UserData.find(
+  (user) => (user: UserModel) => user.userId === frontmatter.authorId
+);
+
+const projects = await getCollection("projects");
+
+const relatedProjects = projects
+  .filter(
+    (project) => (project: ProjectModel) =>
+      project.category === frontmatter.category
+  )
+  .filter(
+    (project) => (project: ProjectModel) =>
+      project.projectId !== frontmatter.projectId
+  )
+  .slice(0, 5);
+---
+
+<MainLayout seo={{ title: frontmatter.title }}>
+  <Header client:only />
+  <section
+    class="flex flex-col gap-5 lg:grid lg:grid-cols-8 max-w-7xl lg:gap-5 mx-auto h-fit py-24"
+  >
+    <div class="lg:col-span-2 flex flex-col gap-5 max-lg:order-2">
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Repository</h1>
+        <div class="flex gap-2 items-center">
+          <div class="i-ri:github-line w-5 h-5"></div>
+          <a href={`${frontmatter.github}`} class="font-medium hover:underline">
+            Github
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="lg:col-span-4 flex flex-col gap-5 max-lg:order-1">
+      <div class="p-5 border border-gray-200 rounded-lg flex flex-col gap-5">
+        <div class="flex gap-2 items-center justify-between">
+          <div class="flex gap-2 items-center">
+            <div class="i-heroicons:user-solid w-5 h-5"></div>
+            <p>by {author?.name ?? "Unknown"}</p>
+          </div>
+        </div>
+        <div class="flex gap-2 items-center w-full">
+          <p>{frontmatter.category}</p>
+        </div>
+        <h1 class="font-medium text-5xl">{frontmatter.title}</h1>
+        <div class="flex gap-2 items-center">
+          <p>{frontmatter.totalContributor} Contributors right now</p>
+        </div>
+        <div>
+          <img
+            src={`/images/projects/${slug}/${frontmatter.cover}`}
+            alt="Project Cover"
+            class="w-full h-full max-h-20rem rounded-lg object-cover"
+          />
+        </div>
+      </div>
+      <div class="p-5 border border-gray-200 rounded-lg max-lg:w-full">
+        <article class="prose">
+          <slot />
+        </article>
+      </div>
+    </div>
+    <div class="lg:col-span-2 flex flex-col gap-5 max-lg:order-3">
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Tags</h1>
+        <div class="flex flex-wrap gap-5">
+          {
+            frontmatter.tags.map((tag: string) => (
+              <a
+                href={`/projects/tag/${tag}`}
+                class="flex gap-2 items-center py-2 px-3 rounded-full text-sm bg-gray-blue"
+              >
+                <p class="text-gray-500">{`#${tag}`}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <div class="border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+        <h1 class="font-medium text-xl">Related Projects</h1>
+        <div class="flex flex-col gap-5">
+          {
+            relatedProjects.map((project) => (
+              <div class="flex gap-2 items-center">
+                <a href={`/project/${project.slug}`} class="hover:underline">
+                  {project.data.title}
+                </a>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <Footer client:only />
+</MainLayout>

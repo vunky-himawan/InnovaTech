@@ -6,5 +6,8 @@ export type ProjectModel = {
   github: string;
   totalLikes: number;
   totalComments: number;
+  totalContributor: number;
+  tags: string[];
+  category: string;
   authorId: string;
 };
