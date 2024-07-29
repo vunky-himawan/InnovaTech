@@ -1,0 +1,57 @@
+---
+import Header from "@/components/Header";
+import MainLayout from "./MainLayout.astro";
+import Footer from "@/components/Footer";
+import type { UserModel } from "@/models/UserModel";
+import { UserData } from "@/data/UserData";
+
+const { frontmatter, slug } = Astro.props;
+
+const author: UserModel | undefined = UserData.find(
+  (user) => user.userId === frontmatter.authorId
+);
+---
+
+<MainLayout seo={{ title: frontmatter.name }}>
+  <Header client:only />
+  <section
+    class="flex flex-col gap-5 max-w-7xl lg:gap-5 mx-auto h-fit py-24 w-full"
+  >
+    <div class="lg:col-span-6 flex flex-col gap-5 max-lg:order-3">
+      <div class="p-5 border border-gray-200 rounded-lg flex flex-col gap-5">
+        <div class="flex gap-2 items-center justify-between">
+          <div class="flex gap-2 items-center">
+            <div class="i-heroicons:user-solid w-5 h-5"></div>
+            <p>{author?.name}</p>
+          </div>
+          <div>
+            <button class="bg-blue-4 px-5 py-2 rounded-full text-white"
+              >Join Community</button
+            >
+          </div>
+        </div>
+        <h1 class="font-medium text-5xl">{frontmatter.name}</h1>
+        <p>{frontmatter.totalMembers} members</p>
+        <div>
+          <img
+            src={`/images/communities/${slug}/${frontmatter.cover}`}
+            alt="Poster"
+            class="object-cover w-full h-full max-h-30rem rounded-lg"
+          />
+        </div>
+        <div class="flex gap-2 items-center">
+          <p>{frontmatter.description}</p>
+        </div>
+        <div></div>
+      </div>
+      <div class="p-5 border border-gray-200 rounded-lg max-lg:w-full">
+        <p class="text-center">
+          This community is currently under construction. Stay tuned for updates
+          and join the community soon!
+        </p>
+      </div>
+    </div>
+    <div class="lg:col-span-2"></div>
+  </section>
+  <Footer client:only />
+</MainLayout>

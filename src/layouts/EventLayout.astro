@@ -75,7 +75,7 @@ type Registration = {
 ---
 
 <MainLayout seo={{ title: frontmatter.title }}>
-  <Header />
+  <Header client:only />
   <section
     class="flex flex-col gap-5 lg:grid lg:grid-cols-8 max-w-7xl lg:gap-5 mx-auto h-fit py-24"
   >
@@ -257,5 +257,5 @@ type Registration = {
       </div>
     </div>
   </section>
-  <Footer />
+  <Footer client:only />
 </MainLayout>
