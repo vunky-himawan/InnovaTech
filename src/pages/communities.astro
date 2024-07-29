@@ -2,17 +2,12 @@
 import MainLayout from "@/layouts/MainLayout.astro";
 import Header from "@/components/Header";
 import HeroDetail from "@/components/HeroDetail";
-import ArticleTrending from "@/components/ArticlePageSection/ArticleTrending";
 import Footer from "@/components/Footer";
-import ArticleBlogPost from "@/components/ArticlePageSection/ArticleBlogPost";
 import CTA from "@/components/CTA";
+import CommunityList from "@/components/CommunityPageSection/CommunityList";
 import { getCollection } from "astro:content";
 
-// const articles = await getCollection("articles");
-// const sortedComunity = articles.sort(
-//   (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime() 
-// );
-
+const communities = await getCollection("communities");
 ---
 
 <MainLayout seo={{ title: "Comunity" }}>
@@ -23,8 +18,7 @@ import { getCollection } from "astro:content";
     inspire="Get Relation"
     client:only
   />
-  <!-- <ArticleTrending articles={sortedComunity} client:only />
-  <ArticleBlogPost articles={sortedComunity} category={category} tags={tags} client:only /> -->
+  <CommunityList data={communities} client:only />
   <CTA
     headline="Be Part of Our Community"
     withButton
