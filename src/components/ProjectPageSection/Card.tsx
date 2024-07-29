@@ -13,7 +13,6 @@ type CardProps = {
   totalContributors?: number;
   totalLikes?: number;
   totalComments?: number;
-  link?: string;
   tags?: string[];
 };
 
@@ -26,7 +25,6 @@ const Card = ({
   totalContributors,
   totalLikes,
   totalComments,
-  link,
   tags,
 }: CardProps) => {
   const user = UserData.find((user) => user.userId === userId);
@@ -138,18 +136,16 @@ const Card = ({
               </button>
             )}
           </div>
-          {link && (
-            <div>
-              <a href={`${link}`}>
-                <Button
-                  color="bg-primary text-white before:content-[''] before:w-full before:h-[10rem] before:absolute before:-top-15 before:-left-1 before:bg-[radial-gradient(30%_100%_at_50%_50%,_#05CD77_0%,_rgba(6,_205,_119,_0.00)_100%)] before:-rotate-55"
-                  border="rounded-md border border-secondary/50"
-                >
-                  View Project
-                </Button>
-              </a>
-            </div>
-          )}
+          <div>
+            <a href={`/project/${slug}`}>
+              <Button
+                color="bg-primary text-white before:content-[''] before:w-full before:h-[10rem] before:absolute before:-top-15 before:-left-1 before:bg-[radial-gradient(30%_100%_at_50%_50%,_#05CD77_0%,_rgba(6,_205,_119,_0.00)_100%)] before:-rotate-55"
+                border="rounded-md border border-secondary/50"
+              >
+                View Project
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     </motion.div>
