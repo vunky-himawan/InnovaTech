@@ -13,8 +13,8 @@ const Header = () => {
     <>
       <header className="fixed w-screen top-0 left-0 px-5 py-2 z-10 ">
         <div className="flex justify-between items-center text-white max-w-1000px mx-auto backdrop-blur-sm bg-primary/50 rounded-full p-3 md:p-4">
-          <div>
-            <h1 className="text-white">Innovatech</h1>
+          <div className="bg-primary backdrop-blur-sm rounded-xl p-2">
+            <img src="/logo.svg" alt="" className="h-10 w-10 rounded-full" />
           </div>
           <div className="h-5 w-5 bg-secondary blur rounded-full animate-pulse lg:hidden"></div>
           <nav className="max-lg:hidden flex gap-20">
